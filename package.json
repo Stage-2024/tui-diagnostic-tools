@@ -1,0 +1,32 @@
+{
+  "name": "tui-diagnostic-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.473.0",
+    "@kubernetes/client-node": "^0.20.0",
+    "dotenv": "^16.3.1",
+    "ink": "^4.4.1",
+    "ink-select-input": "^5.0.0",
+    "js-yaml": "^4.1.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "@sindresorhus/tsconfig": "^3.0.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^20.10.5",
+    "@types/react": "^18.2.45",
+    "typescript": "^5.3.3"
+  }
+}
