@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Text} from 'ink';
-import { registerScreen } from '../router/ScreenRegistry.js';
+import { registerScreen } from '../router/ScreenRegistry';
 
 // const HomeScreen = () => {
 

@@ -1,7 +1,7 @@
 // withScreenRegistration.tsx
 import React from 'react';
-import { ScreenName, ScreenShortcut } from '../decorators/screenTypes.js';
-import { registerScreen } from './ScreenRegistry.js';
+import { ScreenName, ScreenShortcut } from '../decorators/screenTypes';
+import { registerScreen } from './ScreenRegistry';
 
 interface ScreenOptions {
     name: ScreenName;

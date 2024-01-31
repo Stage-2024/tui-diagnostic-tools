@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScreenName, ScreenShortcut } from './screenTypes.js';
-import { registerScreen } from '../router/ScreenRegistry.js';
+import { ScreenName, ScreenShortcut } from './screenTypes';
+import { registerScreen } from '../router/ScreenRegistry';
 
 interface ScreenOptions {
     name: ScreenName;

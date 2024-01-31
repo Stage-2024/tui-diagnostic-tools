@@ -2,8 +2,8 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as dotenv from 'dotenv';
-import { getS3Config } from './kubernetes.js';
-import { S3Config } from './types.js';
+import { getS3Config } from './kubernetes';
+import { S3Config } from './types';
 
 
 let config: S3Config | undefined;
