@@ -34,6 +34,6 @@ if(!config) {
     }
 }
 
-  const s3Config: S3Config = config!;
+  const s3Config: S3Config = config;
 
 export { s3Config };

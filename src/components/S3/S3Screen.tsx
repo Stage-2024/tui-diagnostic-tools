@@ -1,11 +1,12 @@
 import React from 'react';
-import BucketList from './BucketList.js';
-import BucketContent from './BucketContent.js';
+import BucketList from './BucketList';
+import BucketContent from './BucketContent';
+import {Box, Text} from 'ink';
 
 import { useInput } from 'ink';
-import { useS3 } from '../../hooks/useS3.js';
+import { useS3 } from '../../hooks/useS3';
 // import withScreenRegistration from '../../router/withScreenRegistration.js';
-import { registerScreen } from '../../router/ScreenRegistry.js';
+import { registerScreen } from '../../router/ScreenRegistry';
 
 const S3Screen = () => {
 
@@ -46,10 +47,13 @@ const S3Screen = () => {
 
     if (!selectedBucket) {
         return (
-            <BucketList
+            <Box flexDirection='column'>
+                <Text>Select a bucket :</Text>
+                <BucketList
                 paginatedBuckets={buckets}
                 onSelect={({ value }: { value: string }) => setSelectedBucket(value)}
-            />
+                />
+            </Box>
         );
     }
 

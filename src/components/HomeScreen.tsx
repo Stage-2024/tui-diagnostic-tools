@@ -1,10 +1,6 @@
 import React from 'react';
-// import { Box, Text, useInput } from 'ink';
-import { Box, Newline, Text} from 'ink';
-// import { useNavigation } from '../context/NavigationContext.js';
+import { Box, Text} from 'ink';
 import { registerScreen } from '../router/ScreenRegistry.js';
-// import { Screen } from '../decorators/screenDecorator.js';
-// import withScreenRegistration from '../router/withScreenRegistration.js';
 
 // const HomeScreen = () => {
 
@@ -41,11 +37,10 @@ import { registerScreen } from '../router/ScreenRegistry.js';
 // @Screen({ name: 'home', shortcut: 'h' })
 const HomeScreen = () => {
     return (
-        <Box>
-            <Text backgroundColor={"white"}> K00S TUI Diagnostic Terminal</Text>
-            <Newline/>
-            <Text> S3 TOOL (s) </Text>
-            <Text> Help (h) </Text>
+        <Box flexDirection='column'>
+            <Text color='blueBright'> K00S TUI Diagnostic Terminal</Text>
+            <Text> S3 TOOL (s)  Help (h) </Text>
+            <Text>AAAAAAAAA</Text>
         </Box>
     );
 

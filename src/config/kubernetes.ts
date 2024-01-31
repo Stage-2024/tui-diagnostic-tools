@@ -13,6 +13,7 @@ function mandatory(value: string | undefined): string {
 
 export  async function getS3Config(deploymentName: string = "apps-backend") {
     const kubeConfigPath = process.env.KUBECONFIG;
+    console.log(kubeConfigPath)
     if (!kubeConfigPath) {
         throw new Error('KUBECONFIG environment variable not set');
     }

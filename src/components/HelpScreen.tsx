@@ -12,7 +12,7 @@ const HelpScreen = () => {
     // useInput(handleInput);
 
     // Help screen specific logic and UI
-    return <Box>
+    return <Box flexDirection='column'>
                 <Text>Help Information...</Text>
                 <Text>Press Esc  to go to Home Screen.</Text>
             </Box>
