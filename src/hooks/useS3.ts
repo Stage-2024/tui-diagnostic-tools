@@ -15,9 +15,7 @@ export const useS3 = (
   useEffect(() => {
     const getBuckets = async () => {
       try {
-        console.log('les buckets :')
         const bucketNames = await fetchBuckets();
-        console.log(bucketNames)
         setBuckets(bucketNames);
       } catch (error) {
         console.log(s3Config)

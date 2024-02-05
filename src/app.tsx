@@ -7,9 +7,9 @@ import S3Screen from './components/S3/S3Screen.js';
 import { Box, Text, useInput } from 'ink';
 
 let registerScreen = [HomeScreen, HelpScreen, S3Screen]; // hack for now to trigger registry of screens
-console.log('registerScreen', registerScreen);
 
 const App = () => {
+    /*
     const options =  registerScreen.map(a => a.name);
     const [selectedOption, setSelectedOption] = useState(0);
     const [search, setSearch] = useState('');
@@ -29,6 +29,7 @@ const App = () => {
             setSearch((prev) => prev + input);
         }
     });
+    */
 
     return (
         <Box flexDirection="column">
@@ -37,21 +38,6 @@ const App = () => {
                     K00S TUI Diagnostic Terminal
                 </Text>
             </Box>
-
-            <Box marginTop={1}>
-                <Text>Search: </Text>
-                <Text color="cyan">{search}</Text>
-            </Box>
-
-            <Box flexDirection='column'>
-                <Text>Select an option:</Text>
-                {options.map((option, index) => (
-                    <Text key={index} color={selectedOption === index ? 'green' : 'white'}>
-                        {index + 1}. {option}
-                    </Text>
-                ))}
-            </Box>
-
             <Box flexGrow={1} marginTop={1} borderStyle="round" borderColor="blue" padding={1}>
                 <NavigationProvider>
                     <ScreenRouter />

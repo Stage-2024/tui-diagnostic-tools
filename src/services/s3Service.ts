@@ -4,9 +4,7 @@ import { s3Config } from '../config/index.js';
 export const s3Client = new S3Client(s3Config);
 
 export const fetchBuckets = async () => {
-    console.log('o')
     const result = await s3Client.send(new ListBucketsCommand({}));
-    console.log('result :' + result)
     const buckets: string[] = result.Buckets?.map((bucket: Bucket) => bucket.Name || 'undefined name') || ['rip', 'lol'];
     return buckets
 };
