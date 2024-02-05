@@ -11,7 +11,7 @@ declare var process: {
 };
 
 export interface S3Config {
-    region: string;
+    region?: string;
     endpoint: string;
     credentials: {
         accessKeyId: string;

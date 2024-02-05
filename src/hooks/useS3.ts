@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchBuckets, fetchObjectsInBucket } from '../services/s3Service.js';
-
+import { s3Config } from '../config/index.js';
 export const useS3 = (
   itemsPerBucketPage: number = 5,
   itemsPerObjectPage: number = 10
@@ -20,6 +20,7 @@ export const useS3 = (
         console.log(bucketNames)
         setBuckets(bucketNames);
       } catch (error) {
+        console.log(s3Config)
         console.error('Failed to fetch buckets:', error);
       }
     };

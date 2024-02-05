@@ -1,5 +1,4 @@
 import React from 'react';
-// import { Box, Text, useInput } from 'ink';
 import { Box, Text} from 'ink';
 import { registerScreen } from '../router/ScreenRegistry.js';
 // import { useNavigation } from '../context/NavigationContext.js';
