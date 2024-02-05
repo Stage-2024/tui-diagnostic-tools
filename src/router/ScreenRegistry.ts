@@ -1,4 +1,4 @@
-import ScreenConfig from './ScreenConfig';
+import ScreenConfig from './ScreenConfig.js';
 
 const screenRegistry: ScreenConfig[] = [];
 

@@ -1,12 +1,10 @@
 import React from 'react';
-import BucketList from './BucketList';
-import BucketContent from './BucketContent';
-import {Box, Text} from 'ink';
-
-import { useInput } from 'ink';
-import { useS3 } from '../../hooks/useS3';
+import BucketList from './BucketList.js';
+import BucketContent from './BucketContent.js';
+import {Box, Text, useInput} from 'ink';
+import { useS3 } from '../../hooks/useS3.js';
 // import withScreenRegistration from '../../router/withScreenRegistration.js';
-import { registerScreen } from '../../router/ScreenRegistry';
+import { registerScreen } from '../../router/ScreenRegistry.js';
 
 const S3Screen = () => {
 

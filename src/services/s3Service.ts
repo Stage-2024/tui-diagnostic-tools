@@ -1,5 +1,5 @@
 import { S3Client, ListBucketsCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { s3Config } from '../config/index';
+import { s3Config } from '../config/index.js';
 
 export const s3Client = new S3Client(s3Config);
 

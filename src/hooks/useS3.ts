@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchBuckets, fetchObjectsInBucket } from '../services/s3Service';
+import { fetchBuckets, fetchObjectsInBucket } from '../services/s3Service.js';
 
 export const useS3 = (
   itemsPerBucketPage: number = 5,

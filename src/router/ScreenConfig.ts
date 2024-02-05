@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScreenName, ScreenShortcut } from '../decorators/screenTypes';
+import { ScreenName, ScreenShortcut } from '../decorators/screenTypes.js';
 
 interface ScreenConfig {
     name: ScreenName;

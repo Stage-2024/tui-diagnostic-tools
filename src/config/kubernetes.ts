@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises';
 import * as yaml from 'js-yaml';
 import { KubeConfig, AppsV1Api } from '@kubernetes/client-node';
-import { S3Config } from './types';
+import { S3Config } from './types.js';
 
 
 function mandatory(value: string | undefined): string {

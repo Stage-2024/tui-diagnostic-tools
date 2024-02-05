@@ -1,8 +1,8 @@
 import React from 'react';
-import HomeScreen from '../components/HomeScreen';
-import { getScreenConfig } from './ScreenRegistry';
-import { useNavigation } from '../context/NavigationContext';
-import useGlobalInput from './useGlobalInput';
+import HomeScreen from '../components/HomeScreen.js';
+import { getScreenConfig } from './ScreenRegistry.js';
+import { useNavigation } from '../context/NavigationContext.js';
+import useGlobalInput from './useGlobalInput.js';
 
 const ScreenRouter = () => {
     const { currentScreen, navigateTo } = useNavigation();
