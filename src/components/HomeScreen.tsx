@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, Text, useInput } from 'ink';
 import { registerScreen } from '../router/ScreenRegistry.js';
 import Feature from '../types/feature.js';
+import { useNavigation } from '../context/NavigationContext.js';
+import SwicthAction from '../types/switchAction.js';
 
 // const HomeScreen = () => {
 
@@ -36,41 +38,39 @@ import Feature from '../types/feature.js';
 // export default HomeScreen;
 
 // @Screen({ name: 'home', shortcut: 'h' })
+//const { navigateTo } = useNavigation();
 const HomeScreen = () => {
     const options: Feature[] =  [{display: 'HelpScreen', navigation: 'help'}, {display: 'S3Screen', navigation: 's3'}];
     const [selectedOption, setSelectedOption] = useState(0);
     const [search, setSearch] = useState('');
+    const { navigateTo } = useNavigation()
 
     // Handle user input
+    
     useInput((input, key) => {
+        
         if (key.return) {
             // Enter key pressed, handle the selected option here
-            console.log('Selected:', options[selectedOption]);
+            console.log('Selected:', options[selectedOption]?.navigation);
+            navigateTo(options[selectedOption]?.navigation || 'home')
         } else if (key.downArrow) {
             // Down arrow key pressed, move selection down
             setSelectedOption((prev) => (prev + 1) % options.length);
         } else if (key.upArrow) {
             // Up arrow key pressed, move selection up
             setSelectedOption((prev) => (prev - 1 + options.length) % options.length);
-        } else if (input) {
-            setSearch((prev) => prev + input);
         }
-    });
 
-    const handleInput = (input: string, navigateTo: (screen: string) => void) => {
-    
-        if (input === 'key.escape') {
-            navigateTo('home');
+        const inputs: {default: SwicthAction, [key: string]: SwicthAction} = {
+            's': () => navigateTo('s3'),
+            'h': () => navigateTo('help'),
+            default: (input) => setSearch((prev) => prev + input)
         }
-    
-        if (input === 's') {
-            navigateTo('s3');
-        }
-    
-        if (input === 'h') {
-            navigateTo('help');
-        }
-    };
+
+        const action: SwicthAction = inputs[input] ?? inputs.default
+        action(input)
+
+    });
     
     return (
         <Box flexDirection='column'>
@@ -96,7 +96,18 @@ const HomeScreen = () => {
 };
 
 const handleInput = (input: string, navigateTo: (screen: string) => void) => {
-    
+    /*
+    if (input === 'key.return') {
+        // Enter key pressed, handle the selected option here
+        console.log('Selected:', options[selectedOption]?.navigation);
+        navigateTo(options[selectedOption]?.navigation || 'home')
+    }
+
+    if (input === 'key.downArrow'){
+        setSelectedOption((prev) => (prev + 1) % options.length);
+    }
+    */
+
     if (input === 'key.escape') {
         navigateTo('home');
     }
@@ -110,7 +121,7 @@ const handleInput = (input: string, navigateTo: (screen: string) => void) => {
     }
 };
 
-registerScreen({ name: 'home', shortcut: 'esc', Component: HomeScreen, handleInput });
+registerScreen({ name: 'home', shortcut: 'esc', Component: HomeScreen /*, handleInput */ });
 
 export default HomeScreen;
 
