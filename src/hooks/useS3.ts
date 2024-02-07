@@ -30,14 +30,14 @@ export const useS3 = (
   const nbBucketPage = Math.ceil(buckets.length / itemsPerBucketPage)
 
   const handleBucketNextPage = () => {
-    if (bucketPage * itemsPerBucketPage < buckets.length) {
-      setBucketPage(prevPage => prevPage + 1);
-    }
+   setBucketPage((prevPage) => prevPage % nbBucketPage + 1);
   };
 
   const handleBucketPrevPage = () => {
     if (bucketPage > 1) {
       setBucketPage(prevPage => prevPage - 1);
+    } else {
+      setBucketPage(nbBucketPage)
     }
   };
 

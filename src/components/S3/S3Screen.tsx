@@ -5,11 +5,13 @@ import {Box, Text, useInput} from 'ink';
 import { useS3 } from '../../hooks/useS3.js';
 // import withScreenRegistration from '../../router/withScreenRegistration.js';
 import { registerScreen } from '../../router/ScreenRegistry.js';
+import { useNavigation } from '../../context/NavigationContext.js';
 
 const S3Screen = () => {
 
+    const { navigateTo } = useNavigation();
     const itemsPerBucketPage: number = 2;
-    const itemsPerObjectPage: number = 10;
+    const itemsPerObjectPage: number = 3;
 
     const {
         selectedBucket,
@@ -42,6 +44,10 @@ const S3Screen = () => {
             } else {
                 prevPage();
             }
+        }
+
+        if(key.escape && selectedBucket){
+            navigateTo('s3')
         }
     });
 

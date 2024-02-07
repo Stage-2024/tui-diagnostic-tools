@@ -8,6 +8,6 @@ export const registerScreen = (config: ScreenConfig) => {
 };
 
 export const getScreenConfig = (screenName: string): ScreenConfig | undefined => {
-    console.log('Getting screen config for:', screenName);
+    //console.log('Getting screen config for:', screenName);
     return screenRegistry.find(config => config.name === screenName);
 };

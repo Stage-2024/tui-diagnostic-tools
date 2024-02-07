@@ -6,40 +6,6 @@ import { useNavigation } from '../context/NavigationContext.js';
 import { SwitchAction } from '../types/switchAction.js';
 import Switch from '../types/switch.js';
 
-// const HomeScreen = () => {
-
-//     const { navigateTo } = useNavigation();
-
-//     const handleInput = (input: string) => {
-//         if (input === 'key.escape') {
-//             navigateTo('home');      
-//         }
-
-//         if(input === 's') {
-//             navigateTo('s3');
-//         }
-
-//         if(input === 'h') {
-//             navigateTo('help');
-//         }
-//     }
-
-//     useInput(handleInput);
-//     return (
-//         <Box>
-//             <Text>K00S TUI Diagnostic Terminal</Text>
-//             <Text>
-//                 S3 TOOL (s)
-//             </Text>
-//             <Text> Help (h)</Text>
-//         </Box>
-//     );
-// };
-
-// export default HomeScreen;
-
-// @Screen({ name: 'home', shortcut: 'h' })
-//const { navigateTo } = useNavigation();
 const HomeScreen = () => {
     const options: Feature[] =  [{display: 'HelpScreen', navigation: 'help'}, {display: 'S3Screen', navigation: 's3'}];
     const [selectedOption, setSelectedOption] = useState(0);
