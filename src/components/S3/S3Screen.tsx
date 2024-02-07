@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BucketList from './BucketList.js';
 import BucketContent from './BucketContent.js';
 import {Box, Text, useInput} from 'ink';
@@ -8,12 +8,14 @@ import { registerScreen } from '../../router/ScreenRegistry.js';
 
 const S3Screen = () => {
 
-    const itemsPerBucketPage = 10;
-    const itemsPerObjectPage = 10;
+    const itemsPerBucketPage: number = 2;
+    const itemsPerObjectPage: number = 10;
 
     const {
         selectedBucket,
         buckets,
+        bucketPage,
+        nbBucketPage,
         setSelectedBucket,
         objects,
         nextPage,
@@ -51,6 +53,16 @@ const S3Screen = () => {
                 paginatedBuckets={buckets}
                 onSelect={({ value }: { value: string }) => setSelectedBucket(value)}
                 />
+                <Box>
+                    <Text>Page </Text>
+                    <Text bold color="greenBright">{bucketPage} </Text>
+                    <Text>on </Text>
+                    <Text bold color="greenBright">{nbBucketPage}</Text>
+                </Box>
+                <Box marginTop={1} flexDirection="column" justifyContent="space-between">
+                    <Text>Press 'p' or left arrow for Previous</Text>
+                    <Text>Press 'n' or right arrow for Next</Text>
+                </Box>
             </Box>
         );
     }

@@ -10,13 +10,18 @@ export const fetchBuckets = async () => {
 };
 
 export const fetchObjectsInBucket = async (bucketName: string, maxKeys: number, continuationToken?: string) => {
-    const params: any = {
-      Bucket: bucketName,
-      MaxKeys: maxKeys
-    };
-    if (continuationToken) {
-      params.ContinuationToken = continuationToken;
-    }
-    const result = await s3Client.send(new ListObjectsV2Command(params));
-    return result;
+
+  /*
+  if (continuationToken) {
+    command.ContinuationToken = continuationToken;
+  }
+  */
+  const command = new ListObjectsV2Command({
+    MaxKeys: maxKeys,
+    Bucket: bucketName,
+    ContinuationToken: continuationToken
+  })
+
+  const result = await s3Client.send(command);
+  return result;
 };

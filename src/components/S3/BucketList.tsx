@@ -8,16 +8,11 @@ interface BucketListProps {
 }
 
 const BucketList:  React.FC<BucketListProps> = ({ paginatedBuckets, onSelect }) => (
-  // <Box flexDirection="column" borderStyle="round" borderColor="red" width="200">
   <Box flexDirection="column">
     <SelectInput
       items={paginatedBuckets.map((bucket : string) => ({ label: bucket, value: bucket }))}
       onSelect={onSelect}
     />
-    <Box flexDirection="column" justifyContent="space-between">
-      <Text>Press 'p' or left arrow for Previous</Text>
-      <Text>Press 'n' or right arrow for Next</Text>
-    </Box>
   </Box>
 );
 

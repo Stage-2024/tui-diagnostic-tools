@@ -27,6 +27,7 @@ export const useS3 = (
   }, []);
 
   const paginatedBuckets = buckets.slice((bucketPage - 1) * itemsPerBucketPage, bucketPage * itemsPerBucketPage);
+  const nbBucketPage = Math.ceil(buckets.length / itemsPerBucketPage)
 
   const handleBucketNextPage = () => {
     if (bucketPage * itemsPerBucketPage < buckets.length) {
@@ -42,9 +43,8 @@ export const useS3 = (
 
   const loadObjectsInBucket = async (bucketName: string, continuationToken?: string) => {
     const result = await fetchObjectsInBucket(bucketName, itemsPerObjectPage, continuationToken);
-
+    console.log(result)
     setObjects(result.Contents || []);
-
     if (result.NextContinuationToken) {
       setTokens(prevTokens => [...prevTokens, result.NextContinuationToken] as string[]);
     }
@@ -75,6 +75,8 @@ export const useS3 = (
 
   return {
     buckets: paginatedBuckets,
+    bucketPage,
+    nbBucketPage,
     selectedBucket,
     setSelectedBucket,
     objects,
