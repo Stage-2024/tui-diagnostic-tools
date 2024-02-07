@@ -1,3 +1,2 @@
-type SwicthAction = (...params: string[]) => unknown
+export type SwitchAction = (...params: string[]) => unknown
 
-export default SwicthAction

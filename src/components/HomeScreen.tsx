@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Text, useInput } from 'ink';
+import { Box, Key, Text, useInput } from 'ink';
 import { registerScreen } from '../router/ScreenRegistry.js';
 import Feature from '../types/feature.js';
 import { useNavigation } from '../context/NavigationContext.js';
-import SwicthAction from '../types/switchAction.js';
+import { SwitchAction } from '../types/switchAction.js';
+import Switch from '../types/switch.js';
 
 // const HomeScreen = () => {
 
@@ -43,33 +44,39 @@ const HomeScreen = () => {
     const options: Feature[] =  [{display: 'HelpScreen', navigation: 'help'}, {display: 'S3Screen', navigation: 's3'}];
     const [selectedOption, setSelectedOption] = useState(0);
     const [search, setSearch] = useState('');
-    const { navigateTo } = useNavigation()
+    const { navigateTo } = useNavigation();
 
     // Handle user input
     
-    useInput((input, key) => {
+    useInput((input: string, key: Key) => {
         
+        setSearch((prev) => prev + input)
+        let globalInput: string
+
         if (key.return) {
             // Enter key pressed, handle the selected option here
-            console.log('Selected:', options[selectedOption]?.navigation);
-            navigateTo(options[selectedOption]?.navigation || 'home')
+            globalInput = 'return'
         } else if (key.downArrow) {
             // Down arrow key pressed, move selection down
-            setSelectedOption((prev) => (prev + 1) % options.length);
+            globalInput = 'downArrow'
         } else if (key.upArrow) {
             // Up arrow key pressed, move selection up
-            setSelectedOption((prev) => (prev - 1 + options.length) % options.length);
+            globalInput = 'upArrow'
+        } else {
+            globalInput = input
         }
 
-        const inputs: {default: SwicthAction, [key: string]: SwicthAction} = {
-            's': () => navigateTo('s3'),
-            'h': () => navigateTo('help'),
-            default: (input) => setSearch((prev) => prev + input)
+        const inputs: Switch = {
+            s: () => navigateTo('s3'),
+            h: () => navigateTo('help'),
+            return: () => navigateTo(options[selectedOption]?.navigation || 'home'),
+            downArrow: () => setSelectedOption((prev) => (prev + 1) % options.length),
+            upArrow: () => setSelectedOption((prev) => (prev - 1 + options.length) % options.length),
+            default: () => null
         }
 
-        const action: SwicthAction = inputs[input] ?? inputs.default
-        action(input)
-
+        const action: SwitchAction = inputs[globalInput] ?? inputs.default
+        action()
     });
     
     return (
