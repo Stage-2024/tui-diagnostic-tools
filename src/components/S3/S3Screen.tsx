@@ -10,60 +10,44 @@ import { useNavigation } from '../../context/NavigationContext.js';
 const S3Screen = () => {
 
     const { navigateTo } = useNavigation();
-    const itemsPerBucketPage: number = 2;
-    const itemsPerObjectPage: number = 3;
-
-    const {
-        selectedBucket,
-        buckets,
-        bucketPage,
-        nbBucketPage,
-        setSelectedBucket,
-        objects,
-        nextPage,
-        prevPage,
-        currentPage,
-        tokens,
-        handleBucketNextPage,
-        handleBucketPrevPage,
-    } = useS3(itemsPerBucketPage, itemsPerObjectPage);
+    const s3 = useS3({itemsPerBucketPage: 2, itemsPerObjectPage: 3});
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
         if (input === 'n' || key.rightArrow) {
-            if (!selectedBucket) {
-                handleBucketNextPage();
+            if (!s3.selectedBucket) {
+                s3.handleBucketNextPage();
             } else {
-                nextPage();
+                s3.nextPage();
             }
         }
 
         if (input === 'p' || key.leftArrow) {
-            if (!selectedBucket) {
-                handleBucketPrevPage();
+            if (!s3.selectedBucket) {
+                s3.handleBucketPrevPage();
             } else {
-                prevPage();
+                s3.prevPage();
             }
         }
 
-        if(key.escape && selectedBucket){
+        if(key.escape && s3.selectedBucket){
             navigateTo('s3')
         }
     });
 
-    if (!selectedBucket) {
+    if (!s3.selectedBucket) {
         return (
             <Box flexDirection='column'>
-                <Text>Select a bucket :</Text>
+                <Text bold underline>Select a bucket :</Text>
                 <BucketList
-                paginatedBuckets={buckets}
-                onSelect={({ value }: { value: string }) => setSelectedBucket(value)}
+                paginatedBuckets={s3.buckets}
+                onSelect={({ value }: { value: string }) => s3.setSelectedBucket(value)}
                 />
                 <Box>
                     <Text>Page </Text>
-                    <Text bold color="greenBright">{bucketPage} </Text>
+                    <Text bold color="greenBright">{s3.bucketPage} </Text>
                     <Text>on </Text>
-                    <Text bold color="greenBright">{nbBucketPage}</Text>
+                    <Text bold color="greenBright">{s3.nbBucketPage}</Text>
                 </Box>
                 <Box marginTop={1} flexDirection="column" justifyContent="space-between">
                     <Text>Press 'p' or left arrow for Previous</Text>
@@ -74,12 +58,26 @@ const S3Screen = () => {
     }
 
     return (
-        <BucketContent
-            selectedBucket={selectedBucket}
-            objects={objects}
-            currentPage={currentPage}
-            tokens={tokens}
-        />
+        <Box flexDirection='column'>
+            <Box>
+                <Text bold underline>Files in </Text>
+                <Text bold underline color="yellowBright">{s3.selectedBucket} :</Text>
+            </Box>
+            <BucketContent
+                paginatedObjects={s3.objects}
+                onSelect={({}: {}) => null}
+            />
+            <Box>
+                <Text>Page </Text>
+                <Text bold color="greenBright">{s3.currentPage} </Text>
+                <Text>on </Text>
+                <Text bold color="greenBright">{s3.nbObjectPage}</Text>
+            </Box>
+            <Box marginTop={1} flexDirection="column" justifyContent="space-between">
+                    <Text>Press 'p' or left arrow for Previous</Text>
+                    <Text>Press 'n' or right arrow for Next</Text>
+            </Box>
+        </Box>
     );
 }
 

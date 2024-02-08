@@ -5,7 +5,7 @@ import { useNavigation } from '../context/NavigationContext.js';
 import useGlobalInput from './useGlobalInput.js';
 
 const ScreenRouter = () => {
-    const { currentScreen, navigateTo } = useNavigation();
+    const { currentScreen, navigateTo, goBack } = useNavigation();
     const screenConfig = getScreenConfig(currentScreen);
 
     if (!screenConfig) return <HomeScreen/>; // or default screen
@@ -13,7 +13,7 @@ const ScreenRouter = () => {
     const { Component, handleInput } = screenConfig;
 
     // Centralize input handling
-    useGlobalInput(navigateTo, handleInput);
+    useGlobalInput(navigateTo, goBack, handleInput);
 
     return <Component />;
 };

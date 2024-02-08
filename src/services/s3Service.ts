@@ -9,7 +9,7 @@ export const fetchBuckets = async () => {
     return buckets
 };
 
-export const fetchObjectsInBucket = async (bucketName: string, maxKeys: number, continuationToken?: string) => {
+export const fetchObjectsInBucket = async (bucketName: string, continuationToken?: string) => {
 
   /*
   if (continuationToken) {
@@ -17,7 +17,6 @@ export const fetchObjectsInBucket = async (bucketName: string, maxKeys: number, 
   }
   */
   const command = new ListObjectsV2Command({
-    MaxKeys: maxKeys,
     Bucket: bucketName,
     ContinuationToken: continuationToken
   })

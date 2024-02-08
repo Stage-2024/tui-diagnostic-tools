@@ -2,17 +2,18 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import * as dotenv from 'dotenv';
-import { getS3Config } from './kubernetes.js';
+//import { getS3Config } from './kubernetes.js';
 import { S3Config } from './types.js';
 
 
 let config: S3Config | undefined;
-
+/*
 try {
   config = await getS3Config();
 }catch(err) {
   console.error('Error reading or parsing Kubernetes config:', err);
 }
+*/
 
 if(!config) {
   const __filename = fileURLToPath(import.meta.url);

@@ -3,7 +3,7 @@ import ScreenConfig from './ScreenConfig.js';
 const screenRegistry: ScreenConfig[] = [];
 
 export const registerScreen = (config: ScreenConfig) => {
-    console.log('Registering screen:', config);
+    //console.log('Registering screen:', config);
     screenRegistry.push(config);
 };
 

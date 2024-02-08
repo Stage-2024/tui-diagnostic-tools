@@ -1,32 +1,23 @@
 import React from 'react';
 import { Box, Text } from 'ink';
+import SelectInput from 'ink-select-input';
 
 interface BucketObject {
   Key: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 interface BucketContentProps {
-  selectedBucket: string;
-  objects: BucketObject[];
-  currentPage: number;
-  tokens: string[];
+  paginatedObjects: BucketObject[];
+  onSelect: (item: { label: string, value: string }) => void;
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ selectedBucket, objects, currentPage, tokens }) => (
-  <Box flexDirection="column">
-    <Text bold underline>Files in {selectedBucket}:</Text>
-    
-    <Box flexDirection="column" marginBottom={1}>
-      {objects.map(obj => (
-        <Box key={obj.Key}><Text>{obj.Key}</Text></Box>
-      ))}
-    </Box>
-
-    <Box justifyContent="space-between">
-      <Text>{currentPage === 0 ? ' ' : "Press 'p' or left arrow for Previous"}</Text>
-      <Text>{currentPage >= tokens.length - 1 || tokens.length === 0 ? ' ' : "Press 'n' or right arrow for Next"}</Text>
-    </Box>
+const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect }) => (
+  <Box flexDirection="column" margin={1}>
+    <SelectInput
+      items={paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key }))}
+      onSelect={onSelect}
+    />
   </Box>
 );
 

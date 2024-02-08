@@ -8,7 +8,7 @@ interface BucketListProps {
 }
 
 const BucketList:  React.FC<BucketListProps> = ({ paginatedBuckets, onSelect }) => (
-  <Box flexDirection="column">
+  <Box flexDirection="column" margin={1}>
     <SelectInput
       items={paginatedBuckets.map((bucket : string) => ({ label: bucket, value: bucket }))}
       onSelect={onSelect}

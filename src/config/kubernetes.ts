@@ -11,9 +11,10 @@ function mandatory(value: string | undefined): string {
     return value;
 }
 
+/*
 export  async function getS3Config(deploymentName: string = "apps-backend") {
-    const kubeConfigPath = process.env.KUBECONFIG;
-    console.log(kubeConfigPath)
+    const kubeConfigPath: string = process.env.KUBECONFIG ?? '/home/usersio/.kube/config';
+    
     if (!kubeConfigPath) {
         throw new Error('KUBECONFIG environment variable not set');
     }
@@ -67,4 +68,7 @@ export  async function getS3Config(deploymentName: string = "apps-backend") {
         console.error('Error reading or parsing Kubernetes config:', err);
         throw err; 
     }
+    
+    
 }
+*/
