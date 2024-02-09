@@ -9,10 +9,12 @@ import { sortObjects } from '../utils/helper.js';
 export const useS3 = ({ itemsPerBucketPage = 10, itemsPerObjectPage = 10 }: Pagination) => {
   const [buckets, setBuckets] = useState<string[]>([]);
   const [bucketPage, setBucketPage] = useState(1);
-
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
+
   const [objects, setObjects] = useState<BucketObject[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedObject, setSelectedObject] = useState<BucketObject | null>(null)
+
   const [tokens, setTokens] = useState<string[]>([]);
 
   const paginatedBuckets = buckets.slice((bucketPage - 1) * itemsPerBucketPage, bucketPage * itemsPerBucketPage);
@@ -99,15 +101,18 @@ export const useS3 = ({ itemsPerBucketPage = 10, itemsPerObjectPage = 10 }: Pagi
     nbBucketPage,
     handleBucketNextPage,
     handleBucketPrevPage,
-
-    //Object list
     selectedBucket,
     setSelectedBucket,
+
+    //Object list
     objects: paginatedObjects,
     currentPage,
     nbObjectPage,
     nextPage,
     prevPage,
+    selectedObject,
+    setSelectedObject,
+
     tokens,
   };
 };

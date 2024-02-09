@@ -26,7 +26,6 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
                 folders = [...folders, newFolder]
             } else {
                 //On edit le dossier
-                let filesAlreadyInFolder: BucketObject[] = folders[folderIndex]!.Files || []
                 folders[folderIndex]!.Files?.push(fileInFolder)
             } 
         } else {
@@ -35,4 +34,8 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
     }
 
     return [...folders, ...files]
+}
+
+export function getBucketObject(name: string, inListe: BucketObject[]): BucketObject | void {
+    return inListe.find((obj)=> obj.Key === name)
 }
