@@ -10,7 +10,7 @@ import { useNavigation } from '../../context/NavigationContext.js';
 const S3Screen = () => {
 
     const { navigateTo } = useNavigation();
-    const s3 = useS3({itemsPerBucketPage: 2, itemsPerObjectPage: 3});
+    const s3 = useS3({itemsPerBucketPage: 10, itemsPerObjectPage: 10});
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
@@ -26,11 +26,13 @@ const S3Screen = () => {
             if (!s3.selectedBucket) {
                 s3.handleBucketPrevPage();
             } else {
+                //console.log(s3.objects)
                 s3.prevPage();
             }
         }
 
-        if(key.escape && s3.selectedBucket){
+        if(input === 'b'){
+            s3.setSelectedBucket(null)
             navigateTo('s3')
         }
     });
@@ -41,7 +43,7 @@ const S3Screen = () => {
                 <Text bold underline>Select a bucket :</Text>
                 <BucketList
                 paginatedBuckets={s3.buckets}
-                onSelect={({ value }: { value: string }) => s3.setSelectedBucket(value)}
+                onSelect={({ label }: { label: string }) => s3.setSelectedBucket(label)}
                 />
                 <Box>
                     <Text>Page </Text>

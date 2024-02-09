@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Text } from 'ink';
+import { Box } from 'ink';
 import SelectInput from 'ink-select-input';
 
 interface BucketListProps {
   paginatedBuckets: string[];
-  onSelect: (item: { label: string, value: string }) => void;
+  onSelect: (item: { label: string }) => void;
 }
 
 const BucketList:  React.FC<BucketListProps> = ({ paginatedBuckets, onSelect }) => (

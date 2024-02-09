@@ -1,11 +1,7 @@
 import React from 'react';
 import { Box, Text } from 'ink';
 import SelectInput from 'ink-select-input';
-
-interface BucketObject {
-  Key: string;
-  [key: string]: unknown;
-}
+import { BucketObject } from '../../types/bucketObject.js';
 
 interface BucketContentProps {
   paginatedObjects: BucketObject[];

@@ -3,13 +3,15 @@ import { fetchBuckets, fetchObjectsInBucket } from '../services/s3Service.js';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
 import Pagination from '../types/pagination.js'
+import { BucketObject } from '../types/bucketObject.js';
+import { sortObjects } from '../utils/helper.js';
 
-export const useS3 = ({ itemsPerBucketPage = 5, itemsPerObjectPage = 10 }: Pagination) => {
+export const useS3 = ({ itemsPerBucketPage = 10, itemsPerObjectPage = 10 }: Pagination) => {
   const [buckets, setBuckets] = useState<string[]>([]);
   const [bucketPage, setBucketPage] = useState(1);
 
   const [selectedBucket, setSelectedBucket] = useState<string | null>(null);
-  const [objects, setObjects] = useState<TODO[]>([]);
+  const [objects, setObjects] = useState<BucketObject[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [tokens, setTokens] = useState<string[]>([]);
 
@@ -47,8 +49,11 @@ export const useS3 = ({ itemsPerBucketPage = 5, itemsPerObjectPage = 10 }: Pagin
   };
 
   const loadObjectsInBucket = async (bucketName: string, continuationToken?: string) => {
-    const result = await fetchObjectsInBucket(bucketName, continuationToken);
-    setObjects(result.Contents || []);
+    const result = await fetchObjectsInBucket(bucketName, continuationToken)
+    const messyObjects: BucketObject[] = result.Contents?.map(obj => ({...obj, Key: obj.Key || 'nokey'})) || []
+    const orderedObjects: BucketObject[] = sortObjects(messyObjects)
+    setObjects(orderedObjects)
+
     if (result.NextContinuationToken) {
       setTokens(prevTokens => [...prevTokens, result.NextContinuationToken] as string[]);
     }
