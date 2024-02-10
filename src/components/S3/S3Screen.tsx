@@ -9,6 +9,7 @@ import { registerScreen } from '../../router/ScreenRegistry.js';
 import { useNavigation } from '../../context/NavigationContext.js';
 import { getBucketObject } from '../../utils/helper.js';
 import { BucketObject } from '../../types/bucketObject.js';
+import { TODO } from '../../types/todo.js';
 
 const S3Screen = () => {
     
@@ -16,25 +17,29 @@ const S3Screen = () => {
     const s3 = useS3()
     const paginatedBuckets = usePagination<string>(10, s3.buckets)
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
+    const paginatedFoldersObjects = usePagination<BucketObject>(10, s3.selectedObject?.Files || [])
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
         if (input === 'n' || key.rightArrow) {
             if (!s3.selectedBucket) {
-                //s3.handleBucketNextPage();
                 paginatedBuckets.nextPage()
-            } else {
-                //s3.nextPage();
+            } else if(!s3.selectedObject) {
+                //console.log(s3.objects)
                 paginatedObjects.nextPage()
+            } else {
+                paginatedFoldersObjects.nextPage()
             }
         }
 
         if (input === 'p' || key.leftArrow) {
             if (!s3.selectedBucket) {
                 paginatedBuckets.prevPage()
-            } else {
+            } else if(!s3.selectedObject) {
                 //console.log(s3.objects)
                 paginatedObjects.prevPage()
+            } else {
+                paginatedFoldersObjects.prevPage()
             }
         }
 
@@ -89,8 +94,8 @@ const S3Screen = () => {
                     <Text bold color="greenBright">{paginatedObjects.pageCount}</Text>
                 </Box>
                 <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-                        <Text>Press 'p' or left arrow for Previous</Text>
-                        <Text>Press 'n' or right arrow for Next</Text>
+                    <Text>Press 'p' or left arrow for Previous</Text>
+                    <Text>Press 'n' or right arrow for Next</Text>
                 </Box>
             </Box>
         );
@@ -111,9 +116,19 @@ const S3Screen = () => {
                 <Text bold underline color="whiteBright">{s3.selectedObject.Key} :</Text>
             </Box>
             <BucketContent
-                    paginatedObjects={s3.selectedObject.Files || []}
+                    paginatedObjects={paginatedFoldersObjects.items}
                     onSelect={({}: {}) => null}
-                />
+            />
+            <Box>
+                <Text>Page </Text>
+                <Text bold color="greenBright">{paginatedFoldersObjects.page} </Text>
+                <Text>on </Text>
+                <Text bold color="greenBright">{paginatedFoldersObjects.pageCount}</Text>
+            </Box>
+            <Box marginTop={1} flexDirection="column" justifyContent="space-between">
+                <Text>Press 'p' or left arrow for Previous</Text>
+                <Text>Press 'n' or right arrow for Next</Text>
+            </Box>
         </Box>
     );
 
