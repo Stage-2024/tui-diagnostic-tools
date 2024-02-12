@@ -53,51 +53,27 @@ const S3Screen = () => {
 
     if (!s3.selectedBucket) {
         return (
-            <Box flexDirection='column'>
-                <Text bold underline>Select a bucket :</Text>
-                <BucketList
+            <BucketList
                 paginatedBuckets={paginatedBuckets.items}
                 onSelect={({ label }: { label: string }) => s3.setSelectedBucket(label)}
-                />
-                <Box>
-                    <Text>Page </Text>
-                    <Text bold color="greenBright">{paginatedBuckets.page} </Text>
-                    <Text>on </Text>
-                    <Text bold color="greenBright">{paginatedBuckets.pageCount}</Text>
-                </Box>
-                <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-                    <Text>Press 'p' or left arrow for Previous</Text>
-                    <Text>Press 'n' or right arrow for Next</Text>
-                </Box>
-            </Box>
+                page={paginatedBuckets.page}
+                totalPage={paginatedBuckets.pageCount}
+            />
         );
     }
 
     if (!s3.selectedObject){
         return (
-            <Box flexDirection='column'>
-                <Box>
-                    <Text bold underline>Files in </Text>
-                    <Text bold underline color="yellowBright">{s3.selectedBucket} :</Text>
-                </Box>
-                <BucketContent
-                    paginatedObjects={paginatedObjects.items}
-                    onSelect={({ label }: { label: string}) => {
-                        const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
-                        object && s3.setSelectedObject(object)
-                    }}
-                />
-                <Box>
-                    <Text>Page </Text>
-                    <Text bold color="greenBright">{paginatedObjects.page} </Text>
-                    <Text>on </Text>
-                    <Text bold color="greenBright">{paginatedObjects.pageCount}</Text>
-                </Box>
-                <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-                    <Text>Press 'p' or left arrow for Previous</Text>
-                    <Text>Press 'n' or right arrow for Next</Text>
-                </Box>
-            </Box>
+            <BucketContent
+                title={s3.selectedBucket}
+                page={paginatedObjects.page}
+                totalPage={paginatedObjects.pageCount}
+                paginatedObjects={paginatedObjects.items}
+                onSelect={({ label }: { label: string}) => {
+                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                    object && s3.setSelectedObject(object)
+                }}
+            />
         );
     }
 
@@ -110,26 +86,13 @@ const S3Screen = () => {
     }
 
     return (
-        <Box flexDirection='column'>
-            <Box>
-                <Text bold underline>Files in </Text>
-                <Text bold underline color="whiteBright">{s3.selectedObject.Key} :</Text>
-            </Box>
-            <BucketContent
-                    paginatedObjects={paginatedFoldersObjects.items}
-                    onSelect={({}: {}) => null}
-            />
-            <Box>
-                <Text>Page </Text>
-                <Text bold color="greenBright">{paginatedFoldersObjects.page} </Text>
-                <Text>on </Text>
-                <Text bold color="greenBright">{paginatedFoldersObjects.pageCount}</Text>
-            </Box>
-            <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-                <Text>Press 'p' or left arrow for Previous</Text>
-                <Text>Press 'n' or right arrow for Next</Text>
-            </Box>
-        </Box>
+        <BucketContent
+            title={s3.selectedObject.Key}
+            page={paginatedFoldersObjects.page}
+            totalPage={paginatedFoldersObjects.pageCount}
+            paginatedObjects={paginatedFoldersObjects.items}
+            onSelect={({}: {}) => null}
+        />
     );
 
 
