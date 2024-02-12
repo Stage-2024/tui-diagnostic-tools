@@ -13,7 +13,7 @@ const ScreenRouter = () => {
     const { Component, handleInput } = screenConfig;
 
     // Centralize input handling
-    useGlobalInput(navigateTo, goBack, handleInput);
+    useGlobalInput(navigateTo, handleInput);
 
     return <Component />;
 };

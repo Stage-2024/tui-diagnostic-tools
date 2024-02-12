@@ -5,17 +5,18 @@ import {Box, Text, useInput} from 'ink';
 import { useS3 } from '../../hooks/useS3.js';
 import { usePagination } from '../../hooks/usePagination.js';
 import { useClipBoard } from '../../hooks/useClipBoard.js';
-// import withScreenRegistration from '../../router/withScreenRegistration.js';
 import { registerScreen } from '../../router/ScreenRegistry.js';
 import { useNavigation } from '../../context/NavigationContext.js';
 import { getBucketObject } from '../../utils/helper.js';
 import { BucketObject } from '../../types/bucketObject.js';
 import { TODO } from '../../types/todo.js';
+import { useBucketStack } from '../../hooks/useBucketStack.js';
 
 const S3Screen = () => {
     const { navigateTo } = useNavigation()
     const s3 = useS3()
     const clipboard = useClipBoard()
+    const stack = useBucketStack()
     const paginatedBuckets = usePagination<string>(10, s3.buckets)
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
     const paginatedFoldersObjects = usePagination<BucketObject>(10, s3.selectedObject?.Files || [])
@@ -46,7 +47,7 @@ const S3Screen = () => {
 
         if(input === 'b'){
             if(s3.selectedObject){
-                s3.setSelectedObject(null)
+                s3.setSelectedObject(stack.pop())
                 s3.setHighlightedObject(null)
             } else {
                 s3.setSelectedBucket(null)
@@ -63,6 +64,10 @@ const S3Screen = () => {
             if(s3.highlightedObject && s3.selectedBucket){
                 s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket)
             }
+        }
+
+        if(input === 't'){
+            console.log(stack.items)
         }
     });
 
@@ -87,7 +92,7 @@ const S3Screen = () => {
                 clipBoard={clipboard.value}
                 onSelect={({ label }: { label: string}) => {
                     const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
-                    object && s3.setSelectedObject(object)
+                    object && s3.setSelectedObject(object) 
                     s3.setHighlightedObject({Key: ''})
                 }}
                 onHighLight={({ label }: { label: string}) => {
@@ -115,6 +120,7 @@ const S3Screen = () => {
             clipBoard={clipboard.value}
             onSelect={({ label }: { label: string}) => {
                 const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                s3.selectedObject && stack.push(s3.selectedObject)
                 object && s3.setSelectedObject(object)
                 s3.setHighlightedObject({Key: ''})
             }}
@@ -127,14 +133,6 @@ const S3Screen = () => {
 
 
 }
-
-
-// export default withScreenRegistration({ 
-//     name: 's3', 
-//     shortcut: 's',
-// //    handleInput: 
-// })(S3Screen);
-
 
 registerScreen({
     name: 's3',
