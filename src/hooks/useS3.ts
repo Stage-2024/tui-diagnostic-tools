@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { fetchBuckets, fetchObjectsInBucket } from '../services/s3Service.js';
+import { fetchBuckets, fetchObjectsInBucket, getObject} from '../services/s3Service.js';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
 import Pagination from '../types/pagination.js'
 import { BucketObject } from '../types/bucketObject.js';
 import { sortObjects } from '../utils/helper.js';
+import fs from 'node:fs'
+import * as path from 'node:path';
 
 export const useS3 = () => {
   const [buckets, setBuckets] = useState<string[]>([]);
@@ -12,6 +14,7 @@ export const useS3 = () => {
 
   const [objects, setObjects] = useState<BucketObject[]>([]);
   const [selectedObject, setSelectedObject] = useState<BucketObject | null>(null)
+  const [highlightedObject, setHighlightedObject] = useState<BucketObject | null>(null)
 
   const [tokens, setTokens] = useState<string[]>([]);
 
@@ -40,6 +43,21 @@ export const useS3 = () => {
     }
   };
 
+  const downloadObject = async (objectName: string, bucketName: string) => {
+    const result = await getObject(objectName, bucketName)
+    const objectData = await result.Body?.transformToByteArray() ?? ''
+    const fileName: string = objectName.split('/').slice(-1)[0] || 'undefined'
+    const path: string = "C:/Users/lylia/Downloads/" + fileName
+
+    fs.writeFile(path, objectData, (err) => {
+      if (err) {
+          console.error('Erreur lors de l\'écriture du fichier:', err);
+      } else {
+          console.log('L\'objet a été téléchargé avec succès.');
+      }
+    })
+  }
+
   useEffect(() => {
     if (selectedBucket) {
       setObjects([]);
@@ -58,6 +76,9 @@ export const useS3 = () => {
     objects,
     selectedObject,
     setSelectedObject,
+    highlightedObject,
+    setHighlightedObject,
+    downloadObject,
 
     tokens,
   };

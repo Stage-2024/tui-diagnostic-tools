@@ -1,4 +1,4 @@
-import { S3Client, ListBucketsCommand, ListObjectsV2Command, Bucket } from '@aws-sdk/client-s3';
+import { S3Client, ListBucketsCommand, ListObjectsV2Command, Bucket, GetObjectCommand, GetObjectAclCommand, GetObjectRequest, WriteGetObjectResponseRequest } from '@aws-sdk/client-s3';
 import { s3Config } from '../config/index.js';
 
 export const s3Client = new S3Client(s3Config);
@@ -24,3 +24,13 @@ export const fetchObjectsInBucket = async (bucketName: string, continuationToken
   const result = await s3Client.send(command);
   return result;
 };
+
+export const getObject = async (objectName: string, bucketName: string) => {
+  const command = new GetObjectCommand({
+    Bucket: bucketName,
+    Key: objectName
+  })
+  const result = await s3Client.send(command)
+  return result
+
+} 

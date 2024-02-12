@@ -14,7 +14,7 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
         let levels: string[] = object.Key.split('/')
         if(levels.length > 1){  
             //FOLDER
-            let fileInFolder: BucketObject = {Key: levels.slice(1).join('/')}
+            let fileInFolder: BucketObject = {Key: levels.slice(1).join('/'), FullKey: levels.join('/')}
             const folderIndex: number = folders.findIndex(folder => folder.Key == levels[0])
             if(folderIndex == -1){
                 //On ajoute le dossier à la liste des dossiers

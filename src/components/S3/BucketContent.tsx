@@ -2,18 +2,22 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import SelectInput from 'ink-select-input';
 import { BucketObject } from '../../types/bucketObject.js';
+import { ClipBoard } from '../../types/clipBoard.js';
 
 interface BucketContentProps {
   paginatedObjects: BucketObject[];
   onSelect: (item: { label: string }) => void;
+  onHighLight: (item: {label: string}) => void;
   title: string
   page: number
   totalPage: number
+  clipBoard: ClipBoard
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, title, page, totalPage }) => {
-  const items = paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}));
+const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipBoard }) => {
+  const items = [{label: '', value: ''}, ...paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))]
   return (
+  <Box>
   <Box flexDirection='column'>
     <Box>
       <Text bold underline>Files in </Text>
@@ -23,6 +27,7 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
       <SelectInput
         items={items}
         onSelect={onSelect}
+        onHighlight={onHighLight}
       />
     </Box>
     <Box>
@@ -35,6 +40,8 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
       <Text>Press 'p' or left arrow for Previous</Text>
       <Text>Press 'n' or right arrow for Next</Text>
     </Box>
+  </Box>
+  <Text>ClipBoard : {clipBoard.item ? clipBoard.item.Key : ''}</Text>
   </Box>
 )};
 
