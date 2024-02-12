@@ -61,7 +61,7 @@ const S3Screen = () => {
 
         if(input === 'd'){
             if(s3.highlightedObject && s3.selectedBucket){
-                s3.downloadObject(s3.highlightedObject.FullKey ?? 'aaa', s3.selectedBucket)
+                s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket)
             }
         }
     });
@@ -113,7 +113,11 @@ const S3Screen = () => {
             totalPage={paginatedFoldersObjects.pageCount}
             paginatedObjects={paginatedFoldersObjects.items}
             clipBoard={clipboard.value}
-            onSelect={({}: {}) => null}
+            onSelect={({ label }: { label: string}) => {
+                const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                object && s3.setSelectedObject(object)
+                s3.setHighlightedObject({Key: ''})
+            }}
             onHighLight={({ label }: { label: string}) => {
                 const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
                 object && s3.setHighlightedObject(object)
