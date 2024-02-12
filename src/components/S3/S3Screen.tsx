@@ -20,6 +20,7 @@ const S3Screen = () => {
     const paginatedBuckets = usePagination<string>(10, s3.buckets)
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
     const paginatedFoldersObjects = usePagination<BucketObject>(10, s3.selectedObject?.Files || [])
+    const [message, setMessage] = useState<string | null>(null)
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
@@ -61,13 +62,15 @@ const S3Screen = () => {
         }
 
         if(input === 'd'){
-            if(s3.highlightedObject && s3.selectedBucket){
+            setMessage("téléchargement...")
+            if(s3.highlightedObject && s3.selectedBucket && !s3.highlightedObject.Files){
                 s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket)
             }
+            setMessage("objet téléchargé")
         }
 
         if(input === 't'){
-            console.log(stack.items)
+            //console.log(stack.items)
         }
     });
 
@@ -90,10 +93,12 @@ const S3Screen = () => {
                 totalPage={paginatedObjects.pageCount}
                 paginatedObjects={paginatedObjects.items}
                 clipBoard={clipboard.value}
+                message={message ?? undefined}
                 onSelect={({ label }: { label: string}) => {
                     const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                     object && s3.setSelectedObject(object) 
                     s3.setHighlightedObject({Key: ''})
+                    setMessage(null)
                 }}
                 onHighLight={({ label }: { label: string}) => {
                     const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
@@ -118,11 +123,13 @@ const S3Screen = () => {
             totalPage={paginatedFoldersObjects.pageCount}
             paginatedObjects={paginatedFoldersObjects.items}
             clipBoard={clipboard.value}
+            message={message ?? undefined}
             onSelect={({ label }: { label: string}) => {
                 const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
                 s3.selectedObject && stack.push(s3.selectedObject)
                 object && s3.setSelectedObject(object)
                 s3.setHighlightedObject({Key: ''})
+                setMessage(null)
             }}
             onHighLight={({ label }: { label: string}) => {
                 const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)

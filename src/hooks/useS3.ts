@@ -7,6 +7,7 @@ import { BucketObject } from '../types/bucketObject.js';
 import { sortObjects } from '../utils/helper.js';
 import fs from 'node:fs'
 import * as path from 'node:path';
+import os from 'os'
 
 export const useS3 = () => {
   const [buckets, setBuckets] = useState<string[]>([]);
@@ -47,13 +48,13 @@ export const useS3 = () => {
     const result = await getObject(objectName, bucketName)
     const objectData = await result.Body?.transformToByteArray() ?? ''
     const fileName: string = objectName.split('/').slice(-1)[0] || 'undefined'
-    const path: string = "C:/Users/lylia/Downloads/" + fileName
-
+    //const path: string = "C:/Users/lylia/Downloads/" + fileName
+    const path: string = os.homedir() + '/Downloads/' + fileName
     fs.writeFile(path, objectData, (err) => {
       if (err) {
-          console.error('Erreur lors de l\'écriture du fichier:', err);
+          return 'Erreur lors de l\'écriture du fichier:' + err
       } else {
-          console.log('L\'objet a été téléchargé avec succès.');
+          return 'L\'objet a été téléchargé avec succès.'
       }
     })
   }

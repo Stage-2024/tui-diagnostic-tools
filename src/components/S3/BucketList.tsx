@@ -24,10 +24,6 @@ const BucketList:  React.FC<BucketListProps> = ({ paginatedBuckets, onSelect, pa
       <Text>on </Text>
       <Text bold color="greenBright">{totalPage}</Text>
     </Box>
-    <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-      <Text>Press 'p' or left arrow for Previous</Text>
-      <Text>Press 'n' or right arrow for Next</Text>
-    </Box>
   </Box>
   
 );

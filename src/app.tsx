@@ -60,7 +60,7 @@ const App = () => {
     return (
         <Box flexDirection="column">
             <Box borderStyle="round" borderColor="blue" padding={1}>
-                <Text bold color="redBright">
+                <Text bold color="greenBright">
                     K00S TUI Diagnostic Terminal
                 </Text>
             </Box>

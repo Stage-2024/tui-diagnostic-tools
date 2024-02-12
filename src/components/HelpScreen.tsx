@@ -4,32 +4,16 @@ import { registerScreen } from '../router/ScreenRegistry.js';
 // import { useNavigation } from '../context/NavigationContext.js';
 
 const HelpScreen = () => {
-
-    // const { navigateTo } = useNavigation();
-
-
-    // useInput(handleInput);
-
-    // Help screen specific logic and UI
     return <Box flexDirection='column'>
                 <Text>Help Information...</Text>
                 <Text>Press Esc  to go to Home Screen.</Text>
+                <Text color="magentaBright">S3 screen</Text>
+                <Box flexDirection='column' marginLeft={1}>
+                    <Text>Press 'p' or left arrow for Previous</Text>
+                    <Text>Press 'n' or right arrow for Next</Text>
+                </Box>
             </Box>
 };
-
-// const handleInput = (input: string) => {
-//     if (input === 'key.escape') {
-//         console.log('Esc pressed')
-//         navigateTo('home');      
-//     }
-// };
-
-
-// export default withScreenRegistration({ 
-//     name: 'help', 
-//     shortcut: 'h',
-//     // handleInput
-// })(HelpScreen);
 
 registerScreen({
     name: 'help',

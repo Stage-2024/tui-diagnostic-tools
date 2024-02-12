@@ -12,12 +12,13 @@ interface BucketContentProps {
   page: number
   totalPage: number
   clipBoard: ClipBoard
+  message? : string
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipBoard }) => {
+const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipBoard, message }) => {
   const items = [{label: '', value: ''}, ...paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))]
   return (
-  <Box>
+  <Box flexDirection="row" justifyContent="space-between">
   <Box flexDirection='column'>
     <Box>
       <Text bold underline>Files in </Text>
@@ -36,12 +37,14 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
       <Text>on </Text>
       <Text bold color="greenBright">{totalPage}</Text>
     </Box>
-    <Box marginTop={1} flexDirection="column" justifyContent="space-between">
-      <Text>Press 'p' or left arrow for Previous</Text>
-      <Text>Press 'n' or right arrow for Next</Text>
-    </Box>
+    <Text>{message}</Text>
   </Box>
-  <Text>ClipBoard : {clipBoard.item ? clipBoard.item.Key : ''}</Text>
+  <Box borderColor="greenBright" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
+    <Box borderTopColor="yellowBright" borderStyle="single">
+      <Text>Press 'd' to download the object</Text>
+    </Box>
+    <Text>ClipBoard : {clipBoard.item ? clipBoard.item.Key : ''}</Text>
+  </Box>
   </Box>
 )};
 
