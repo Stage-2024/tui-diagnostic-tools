@@ -60,7 +60,7 @@ const App = () => {
     return (
         <Box flexDirection="column">
             <Box borderStyle="round" borderColor="blue" padding={1}>
-                <Text bold color="greenBright">
+                <Text bold color={process.env['DEBUG'] ? "greenBright" : color}>
                     K00S TUI Diagnostic Terminal
                 </Text>
             </Box>

@@ -3,7 +3,8 @@ export interface ProcessEnv {
     S3_SECRET_ACCESS_KEY?: string;
     S3_AWS_REGION?: string;
     S3_AWS_ENDPOINT?: string;
-    [key: string]: string | undefined;
+    DEBUG?: boolean
+    [key: string]: string | boolean | undefined;
 }
 
 declare var process: {

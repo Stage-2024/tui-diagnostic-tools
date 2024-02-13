@@ -18,7 +18,7 @@ interface BucketContentProps {
 const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipBoard, message }) => {
   const items = [{label: '', value: ''}, ...paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))]
   return (
-  <Box flexDirection="row" justifyContent="space-between">
+  <Box flexDirection="row" gap={4}>
   <Box flexDirection='column'>
     <Box>
       <Text bold underline>Files in </Text>
@@ -39,12 +39,19 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
     </Box>
     <Text>{message}</Text>
   </Box>
-  <Box borderColor="greenBright" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
-    <Box borderTopColor="yellowBright" borderStyle="single">
-      <Text>Press 'd' to download the object</Text>
-    </Box>
-    <Text>ClipBoard : {clipBoard.item ? clipBoard.item.Key : ''}</Text>
+  <Box>
+
   </Box>
+  <Box borderColor="greenBright" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
+    <Text>ClipBoard : {clipBoard?.item ? clipBoard.item.Key : ''}</Text>
+  </Box>
+  
+  <Box flexDirection='column'>
+      <Text>Press 'd' to download the object</Text>
+      <Text>Press 'c' to copy an object</Text>
+      <Text>Press 'v' to past an object</Text>
+      <Text>Press 'r' to refresh</Text>
+    </Box>
   </Box>
 )};
 

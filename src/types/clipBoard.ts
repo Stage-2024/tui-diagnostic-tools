@@ -1,5 +1,5 @@
 import { BucketObject } from "./bucketObject.js";
 
-export interface ClipBoard {
+export type ClipBoard = null | {
     item: BucketObject | null
 }

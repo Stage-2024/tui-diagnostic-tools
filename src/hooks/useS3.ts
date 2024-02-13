@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchBuckets, fetchObjectsInBucket, getObject} from '../services/s3Service.js';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
+import { Message } from '../types/message.js';
 import Pagination from '../types/pagination.js'
 import { BucketObject } from '../types/bucketObject.js';
 import { sortObjects } from '../utils/helper.js';
@@ -44,19 +45,41 @@ export const useS3 = () => {
     }
   };
 
-  const downloadObject = async (objectName: string, bucketName: string) => {
+  const downloadObject = async (objectName: string, bucketName: string): Promise<Message> => {
     const result = await getObject(objectName, bucketName)
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     const objectData = await result.Body?.transformToByteArray() ?? ''
     const fileName: string = objectName.split('/').slice(-1)[0] || 'undefined'
-    //const path: string = "C:/Users/lylia/Downloads/" + fileName
     const path: string = os.homedir() + '/Downloads/' + fileName
-    fs.writeFile(path, objectData, (err) => {
-      if (err) {
-          return 'Erreur lors de l\'écriture du fichier:' + err
-      } else {
-          return 'L\'objet a été téléchargé avec succès.'
-      }
+    let message: Message = null
+    const writeFilePromise: Promise<Message> = new Promise<Message>((resolve) => {
+      fs.writeFile(path, objectData, (err) => {
+        if (err) {
+          message =  {
+            content: [
+              {text: 'Erreur lors de l\'écriture du fichier: '},
+              {
+                text: err.message,
+                highlight: true
+              }
+            ]
+          }
+        } else {
+          message = {
+            content: [
+              {text: 'L\'objet '},
+              {
+                text: objectName,
+                highlight: true
+              },
+              {text: ' a été téléchargé avec succès.'}
+            ]
+          }
+        }
+        resolve(message)
+      })
     })
+    return await writeFilePromise
   }
 
   useEffect(() => {

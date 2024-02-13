@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BucketList from './BucketList.js';
 import BucketContent from './BucketContent.js';
+import DisplayMessage from './DisplayMessage.js';
 import {Box, Text, useInput} from 'ink';
 import { useS3 } from '../../hooks/useS3.js';
 import { usePagination } from '../../hooks/usePagination.js';
@@ -11,8 +12,11 @@ import { getBucketObject } from '../../utils/helper.js';
 import { BucketObject } from '../../types/bucketObject.js';
 import { TODO } from '../../types/todo.js';
 import { useBucketStack } from '../../hooks/useBucketStack.js';
+import { useInfo } from '../../hooks/useInfo.js';
 
 const S3Screen = () => {
+    
+    //hooks
     const { navigateTo } = useNavigation()
     const s3 = useS3()
     const clipboard = useClipBoard()
@@ -20,6 +24,9 @@ const S3Screen = () => {
     const paginatedBuckets = usePagination<string>(10, s3.buckets)
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
     const paginatedFoldersObjects = usePagination<BucketObject>(10, s3.selectedObject?.Files || [])
+    const info = useInfo()
+    
+    //state variables
     const [message, setMessage] = useState<string | null>(null)
 
     // Handling keyboard input for pagination
@@ -62,11 +69,21 @@ const S3Screen = () => {
         }
 
         if(input === 'd'){
-            setMessage("téléchargement...")
+            
             if(s3.highlightedObject && s3.selectedBucket && !s3.highlightedObject.Files){
-                s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket)
+                info.setMessage({
+                    content: [
+                        {
+                            text: "téléchargement...",
+                        }
+                    ],
+                    loader: true
+                })
+                s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket).then((message) => {
+                    info.setMessage(message)
+                })
             }
-            setMessage("objet téléchargé")
+            
         }
 
         if(input === 't'){
@@ -87,24 +104,27 @@ const S3Screen = () => {
 
     if (!s3.selectedObject){
         return (
-            <BucketContent
-                title={s3.selectedBucket}
-                page={paginatedObjects.page}
-                totalPage={paginatedObjects.pageCount}
-                paginatedObjects={paginatedObjects.items}
-                clipBoard={clipboard.value}
-                message={message ?? undefined}
-                onSelect={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
-                    object && s3.setSelectedObject(object) 
-                    s3.setHighlightedObject({Key: ''})
-                    setMessage(null)
-                }}
-                onHighLight={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
-                    object && s3.setHighlightedObject(object)
-                }}
-            />
+            <Box flexDirection='column'>
+                <BucketContent
+                    title={s3.selectedBucket}
+                    page={paginatedObjects.page}
+                    totalPage={paginatedObjects.pageCount}
+                    paginatedObjects={paginatedObjects.items}
+                    clipBoard={clipboard.value}
+                    onSelect={({ label }: { label: string}) => {
+                        const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                        object && s3.setSelectedObject(object) 
+                        s3.setHighlightedObject({Key: ''})
+                        info.setMessage(null)
+                    }}
+                    onHighLight={({ label }: { label: string}) => {
+                        const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                        object && s3.setHighlightedObject(object)
+                    }}
+                />
+                <DisplayMessage message={info.message} highlight='yellowBright'>   
+                </DisplayMessage>
+            </Box>
         );
     }
 
@@ -117,25 +137,28 @@ const S3Screen = () => {
     }
 
     return (
-        <BucketContent
-            title={s3.selectedObject.Key}
-            page={paginatedFoldersObjects.page}
-            totalPage={paginatedFoldersObjects.pageCount}
-            paginatedObjects={paginatedFoldersObjects.items}
-            clipBoard={clipboard.value}
-            message={message ?? undefined}
-            onSelect={({ label }: { label: string}) => {
-                const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
-                s3.selectedObject && stack.push(s3.selectedObject)
-                object && s3.setSelectedObject(object)
-                s3.setHighlightedObject({Key: ''})
-                setMessage(null)
-            }}
-            onHighLight={({ label }: { label: string}) => {
-                const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
-                object && s3.setHighlightedObject(object)
-            }}
-        />
+        <Box flexDirection='column'>
+            <BucketContent
+                title={s3.selectedObject.Key}
+                page={paginatedFoldersObjects.page}
+                totalPage={paginatedFoldersObjects.pageCount}
+                paginatedObjects={paginatedFoldersObjects.items}
+                clipBoard={clipboard.value}
+                onSelect={({ label }: { label: string}) => {
+                    const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                    s3.selectedObject && stack.push(s3.selectedObject)
+                    object && s3.setSelectedObject(object)
+                    s3.setHighlightedObject({Key: ''})
+                    info.setMessage(null)
+                }}
+                onHighLight={({ label }: { label: string}) => {
+                    const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                    object && s3.setHighlightedObject(object)
+                }}
+            />
+            <DisplayMessage message={info.message} highlight='yellowBright'>   
+            </DisplayMessage>
+        </Box>
     );
 
 
