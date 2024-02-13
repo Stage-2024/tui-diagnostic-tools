@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchBuckets, fetchObjectsInBucket, getObject} from '../services/s3Service.js';
+import { fetchBuckets, fetchObjectsInBucket, getObject, putObject} from '../services/s3Service.js';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
 import { Message } from '../types/message.js';
@@ -9,6 +9,7 @@ import { sortObjects } from '../utils/helper.js';
 import fs from 'node:fs'
 import * as path from 'node:path';
 import os from 'os'
+import { ClipBoard } from '../types/clipBoard.js';
 
 export const useS3 = () => {
   const [buckets, setBuckets] = useState<string[]>([]);
@@ -34,7 +35,7 @@ export const useS3 = () => {
     getBuckets();
   }, []);
 
-  const loadObjectsInBucket = async (bucketName: string, continuationToken?: string) => {
+  const loadObjectsInBucket = async (bucketName: string, continuationToken?: string): Promise<BucketObject[]> => {
     const result = await fetchObjectsInBucket(bucketName, continuationToken)
     const messyObjects: BucketObject[] = result.Contents?.map(obj => ({...obj, Key: obj.Key || 'nokey'})) || []
     const orderedObjects: BucketObject[] = sortObjects(messyObjects)
@@ -43,7 +44,19 @@ export const useS3 = () => {
     if (result.NextContinuationToken) {
       setTokens(prevTokens => [...prevTokens, result.NextContinuationToken] as string[]);
     }
+
+    return orderedObjects;
   };
+
+  const refresh = async () => {
+    if(selectedBucket){
+      const objects = await loadObjectsInBucket(selectedBucket)
+    } else {
+      null
+    }
+    
+    //setSelectedObject(currentFolder ?? null)
+  }
 
   const downloadObject = async (objectName: string, bucketName: string): Promise<Message> => {
     const result = await getObject(objectName, bucketName)
@@ -82,6 +95,20 @@ export const useS3 = () => {
     return await writeFilePromise
   }
 
+  const addObject = async (clipBoard: ClipBoard, newBucket: string, newFolderKey? : string) => {
+    if(clipBoard){
+      const object = await getObject(clipBoard.item.FullKey ?? clipBoard.item.Key, clipBoard.bucket)
+      const newObjectKey: string = newFolderKey ?? '' + '/' + clipBoard.item.Key
+      const objectData = await object.Body?.transformToByteArray()
+      const result = await putObject(newObjectKey, objectData, newBucket)
+      console.log(result)
+      return result
+    } else {
+      return 'no clipboard'
+    }
+    
+  }
+
   useEffect(() => {
     if (selectedBucket) {
       setObjects([]);
@@ -103,6 +130,9 @@ export const useS3 = () => {
     highlightedObject,
     setHighlightedObject,
     downloadObject,
+    addObject,
+
+    refresh,
 
     tokens,
   };

@@ -25,9 +25,6 @@ const S3Screen = () => {
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
     const paginatedFoldersObjects = usePagination<BucketObject>(10, s3.selectedObject?.Files || [])
     const info = useInfo()
-    
-    //state variables
-    const [message, setMessage] = useState<string | null>(null)
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
@@ -53,7 +50,7 @@ const S3Screen = () => {
             }
         }
 
-        if(input === 'b'){
+        if(input === 'b'){ // Go Back
             if(s3.selectedObject){
                 s3.setSelectedObject(stack.pop())
                 s3.setHighlightedObject(null)
@@ -64,11 +61,23 @@ const S3Screen = () => {
             }
         }
 
-        if(input === 'c'){
-            s3.highlightedObject ? clipboard.setValue({item: s3.highlightedObject}) : null
+        if(input === 'c'){ // Copy
+            if(s3.highlightedObject && s3.selectedBucket){
+                clipboard.setValue({item: s3.highlightedObject, bucket: s3.selectedBucket})
+            }
         }
 
-        if(input === 'd'){
+        if(input === 'v'){ // Paste
+            if(!clipboard.value?.item.Files && s3.selectedBucket){
+                if(s3.selectedObject?.Files || !s3.selectedObject){
+                    s3.addObject(clipboard.value, s3.selectedBucket, s3.selectedObject?.FullKey ?? s3.selectedObject?.Key)
+                }
+                
+            }
+            
+        }
+
+        if(input === 'd'){ // Download
             
             if(s3.highlightedObject && s3.selectedBucket && !s3.highlightedObject.Files){
                 info.setMessage({
@@ -86,7 +95,11 @@ const S3Screen = () => {
             
         }
 
-        if(input === 't'){
+        if(input === 'r'){ // Refresh
+            s3.refresh()
+        }
+
+        if(input === 't'){ // Debug
             //console.log(stack.items)
         }
     });
@@ -122,8 +135,7 @@ const S3Screen = () => {
                         object && s3.setHighlightedObject(object)
                     }}
                 />
-                <DisplayMessage message={info.message} highlight='yellowBright'>   
-                </DisplayMessage>
+                <DisplayMessage message={info.message} highlight='yellowBright'></DisplayMessage>
             </Box>
         );
     }
@@ -156,8 +168,7 @@ const S3Screen = () => {
                     object && s3.setHighlightedObject(object)
                 }}
             />
-            <DisplayMessage message={info.message} highlight='yellowBright'>   
-            </DisplayMessage>
+            <DisplayMessage message={info.message} highlight='yellowBright'></DisplayMessage>
         </Box>
     );
 
