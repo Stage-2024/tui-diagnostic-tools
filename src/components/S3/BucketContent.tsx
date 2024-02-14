@@ -12,11 +12,14 @@ interface BucketContentProps {
   page: number
   totalPage: number
   clipboard: Clipboard
+  highlight: BucketObject | null
   message? : string
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipboard, message }) => {
+const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipboard, highlight, message }) => {
+  
   const items = paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))
+
   return (
   <Box flexDirection="row" gap={4}>
   <Box flexDirection='column'>
@@ -42,7 +45,18 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
   <Box>
 
   </Box>
-  <Box borderColor="greenBright" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
+  <Box borderColor="green" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
+    <Text>
+      Highlight : <Text underline>{highlight?.Key}</Text>
+    </Text>
+    {highlight?.Size && 
+      <Text>Size : 
+        <Text color="greenBright"> {highlight?.Size} </Text>
+        o
+      </Text>
+    }  
+  </Box>
+  <Box borderColor="yellow" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
     <Text>ClipBoard : {clipboard?.item ? clipboard.item.Key : ''}</Text>
   </Box>
   

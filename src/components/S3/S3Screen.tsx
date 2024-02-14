@@ -156,6 +156,7 @@ const S3Screen = () => {
                     totalPage={paginatedObjects.pageCount}
                     paginatedObjects={paginatedObjects.items}
                     clipboard={clipboard.value}
+                    highlight={s3.highlightedObject}
                     onSelect={({ label }: { label: string}) => {
                         const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                         object && s3.setSelectedObject(object) 
@@ -188,6 +189,7 @@ const S3Screen = () => {
                 totalPage={paginatedFoldersObjects.pageCount}
                 paginatedObjects={paginatedFoldersObjects.items}
                 clipboard={clipboard.value}
+                highlight={s3.highlightedObject}
                 onSelect={({ label }: { label: string}) => {
                     const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
                     s3.selectedObject && stack.push(s3.selectedObject)

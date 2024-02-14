@@ -37,7 +37,12 @@ export const useS3 = () => {
 
   const loadObjectsInBucket = async (bucketName: string, continuationToken?: string): Promise<BucketObject[]> => {
     const result = await fetchObjectsInBucket(bucketName, continuationToken)
-    const messyObjects: BucketObject[] = result.Contents?.map(obj => ({...obj, Key: obj.Key || 'errnokey', FullKey: obj.Key || 'errnokey'})) || []
+    const messyObjects: BucketObject[] = result.Contents?.map(obj => ({
+      ...obj, 
+      Key: obj.Key || 'errnokey', 
+      FullKey: obj.Key || 'errnokey',
+      Size: obj.Size
+    })) || []
     const orderedObjects: BucketObject[] = sortObjects(messyObjects)
     setObjects(orderedObjects)
 
