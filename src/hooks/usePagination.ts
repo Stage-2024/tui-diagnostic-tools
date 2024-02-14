@@ -16,6 +16,6 @@ export const usePagination = <T>(itemsPerPage: number, totalItems: T[]) => {
     }
   };
 
-  const items = totalItems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const items: T[] = totalItems.slice((page - 1) * itemsPerPage, page * itemsPerPage);
   return { page, pageCount, nextPage, prevPage, items };
 };

@@ -160,7 +160,6 @@ const S3Screen = () => {
                     onSelect={({ label }: { label: string}) => {
                         const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                         object && s3.setSelectedObject(object) 
-                        s3.setHighlightedObject({Key: '', FullKey: ''})
                         info.setMessage(null)
                     }}
                     onHighLight={({ label }: { label: string}) => {
@@ -194,7 +193,6 @@ const S3Screen = () => {
                     const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
                     s3.selectedObject && stack.push(s3.selectedObject)
                     object && s3.setSelectedObject(object)
-                    s3.setHighlightedObject({Key: '', FullKey: ''})
                     info.setMessage(null)
                 }}
                 onHighLight={({ label }: { label: string}) => {

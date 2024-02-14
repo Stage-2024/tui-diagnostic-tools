@@ -20,8 +20,9 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
   
   const items = paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))
 
+  const highlightedDate: string =  highlight?.LastModified?.toLocaleString() ?? 'unknown'
   return (
-  <Box flexDirection="row" gap={4}>
+  <Box flexDirection="row" gap={3}>
   <Box flexDirection='column'>
     <Box>
       <Text bold underline>Files in </Text>
@@ -49,12 +50,14 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
     <Text>
       Highlight : <Text underline>{highlight?.Key}</Text>
     </Text>
-    {highlight?.Size && 
-      <Text>Size : 
-        <Text color="greenBright"> {highlight?.Size} </Text>
-        o
-      </Text>
-    }  
+    <Text>Size : 
+      <Text color="greenBright"> {highlight?.Size} </Text>
+      o
+    </Text>
+    <Text>
+      Last modified : 
+      <Text color="blue"> {highlightedDate}</Text>
+    </Text> 
   </Box>
   <Box borderColor="yellow" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
     <Text>ClipBoard : {clipboard?.item ? clipboard.item.Key : ''}</Text>

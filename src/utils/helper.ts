@@ -17,7 +17,8 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
             let fileInFolder: BucketObject = {
                 Key: levels.slice(1).join('/'), 
                 FullKey: object.FullKey ?? object.Key,
-                Size: object.Size
+                Size: object.Size,
+                LastModified: object.LastModified
             }
             const folderIndex: number = folders.findIndex(folder => folder.Key == levels[0])
             if(folderIndex == -1){
@@ -27,6 +28,7 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
                 let newFolder: BucketObject = {
                     Key: levels[0] || 'errorReadingFolder',
                     FullKey: '', 
+                    Size: 0,
                     Files: [fileInFolder]
                 }
                 

@@ -41,7 +41,8 @@ export const useS3 = () => {
       ...obj, 
       Key: obj.Key || 'errnokey', 
       FullKey: obj.Key || 'errnokey',
-      Size: obj.Size
+      Size: obj.Size || 0,
+      Truc: obj.LastModified
     })) || []
     const orderedObjects: BucketObject[] = sortObjects(messyObjects)
     setObjects(orderedObjects)
