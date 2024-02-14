@@ -12,7 +12,7 @@ export default function DisplayMessage(props: PropsWithChildren<Props>) {
 
     return (
         <Box marginX={1} marginTop={1}>
-            {props.message?.loader && <Text color="greenBright"><Spinner type='dots4'/> </Text>}
+            {props.message?.loader && <Text color="greenBright"><Spinner type={props.message.loader}/> </Text>}
             {props.message?.content?.map((element) => {
                 if(element.highlight){
                     return <Text underline color={props.highlight}>{element.text}</Text>
@@ -21,7 +21,6 @@ export default function DisplayMessage(props: PropsWithChildren<Props>) {
                 }
                 
             })}
-            {props.children}
         </Box>
     )
 }

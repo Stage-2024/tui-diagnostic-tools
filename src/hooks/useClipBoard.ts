@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { ClipBoard } from '../types/clipBoard.js';
+import { Clipboard } from '../types/clipboard.js';
 
-export const useClipBoard = () => {
-    const [clipBoard, setClipBoard] = useState<ClipBoard>(null);
+export const useClipboard = () => {
+    const [clipboard, setClipboard] = useState<Clipboard>(null);
 
     return {
-        value: clipBoard,
-        setValue: setClipBoard
+        value: clipboard,
+        setValue: setClipboard
     }
 }

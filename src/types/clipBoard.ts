@@ -1,6 +1,6 @@
 import { BucketObject } from "./bucketObject.js";
 
-export type ClipBoard = null | {
+export type Clipboard = null | {
     item: BucketObject
     bucket: string
 }

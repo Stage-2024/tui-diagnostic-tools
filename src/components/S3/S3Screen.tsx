@@ -5,7 +5,7 @@ import DisplayMessage from './DisplayMessage.js';
 import {Box, Text, useInput} from 'ink';
 import { useS3 } from '../../hooks/useS3.js';
 import { usePagination } from '../../hooks/usePagination.js';
-import { useClipBoard } from '../../hooks/useClipBoard.js';
+import { useClipboard } from '../../hooks/useClipboard.js';
 import { registerScreen } from '../../router/ScreenRegistry.js';
 import { useNavigation } from '../../context/NavigationContext.js';
 import { getBucketObject } from '../../utils/helper.js';
@@ -19,7 +19,7 @@ const S3Screen = () => {
     //hooks
     const { navigateTo } = useNavigation()
     const s3 = useS3()
-    const clipboard = useClipBoard()
+    const clipboard = useClipboard()
     const stack = useBucketStack()
     const paginatedBuckets = usePagination<string>(10, s3.buckets)
     const paginatedObjects = usePagination<BucketObject>(10, s3.objects)
@@ -68,9 +68,34 @@ const S3Screen = () => {
         }
 
         if(input === 'v'){ // Paste
-            if(!clipboard.value?.item.Files && s3.selectedBucket){
-                if(s3.selectedObject?.Files || !s3.selectedObject){
-                    s3.addObject(clipboard.value, s3.selectedBucket, s3.selectedObject?.FullKey ?? s3.selectedObject?.Key)
+            
+            if(clipboard.value && s3.selectedBucket){ // Should paste in a bucket with something in the clipboard
+                if((s3.selectedObject?.Files || !s3.selectedObject) && !clipboard.value?.item.Files){
+                    info.setMessage({
+                        content: [
+                            {
+                                text: "Ajout de l'objet "
+                            },
+                            {
+                                text: clipboard.value?.item.Key,
+                                highlight: true
+                            },
+                            {
+                                text: " dans le répertoire "
+                            },
+                            {
+                                text: s3.selectedBucket,
+                                highlight: true
+                            }
+                        ],
+                        loader: 'flip'
+                    })
+                    s3.addObject(clipboard.value, s3.selectedBucket, s3.selectedObject?.FullKey ?? s3.selectedObject?.Key).then(() => {
+                        info.setMessage({
+                            content: [{text: "objet copié avec succès"}]
+                        })
+                        s3.refresh()
+                    })
                 }
                 
             }
@@ -83,10 +108,10 @@ const S3Screen = () => {
                 info.setMessage({
                     content: [
                         {
-                            text: "téléchargement...",
+                            text: "Téléchargement...",
                         }
                     ],
-                    loader: true
+                    loader: 'dots4'
                 })
                 s3.downloadObject(s3.highlightedObject.FullKey ?? s3.highlightedObject.Key, s3.selectedBucket).then((message) => {
                     info.setMessage(message)
@@ -96,11 +121,18 @@ const S3Screen = () => {
         }
 
         if(input === 'r'){ // Refresh
-            s3.refresh()
+            info.setMessage({
+                content:[{text:"Rafraîchissement de la liste des fichiers..."}],
+                loader: 'dots'
+            })
+            
+            s3.refresh().then(() => info.setMessage({
+                content:[{text:'Liste des fichiers rafraîchie.'}]
+            }))
         }
 
         if(input === 't'){ // Debug
-            //console.log(stack.items)
+            console.log(stack.items)
         }
     });
 
@@ -123,11 +155,11 @@ const S3Screen = () => {
                     page={paginatedObjects.page}
                     totalPage={paginatedObjects.pageCount}
                     paginatedObjects={paginatedObjects.items}
-                    clipBoard={clipboard.value}
+                    clipboard={clipboard.value}
                     onSelect={({ label }: { label: string}) => {
                         const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                         object && s3.setSelectedObject(object) 
-                        s3.setHighlightedObject({Key: ''})
+                        s3.setHighlightedObject({Key: '', FullKey: ''})
                         info.setMessage(null)
                     }}
                     onHighLight={({ label }: { label: string}) => {
@@ -155,12 +187,12 @@ const S3Screen = () => {
                 page={paginatedFoldersObjects.page}
                 totalPage={paginatedFoldersObjects.pageCount}
                 paginatedObjects={paginatedFoldersObjects.items}
-                clipBoard={clipboard.value}
+                clipboard={clipboard.value}
                 onSelect={({ label }: { label: string}) => {
                     const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
                     s3.selectedObject && stack.push(s3.selectedObject)
                     object && s3.setSelectedObject(object)
-                    s3.setHighlightedObject({Key: ''})
+                    s3.setHighlightedObject({Key: '', FullKey: ''})
                     info.setMessage(null)
                 }}
                 onHighLight={({ label }: { label: string}) => {

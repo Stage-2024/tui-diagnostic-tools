@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Text } from 'ink';
 import SelectInput from 'ink-select-input';
 import { BucketObject } from '../../types/bucketObject.js';
-import { ClipBoard } from '../../types/clipBoard.js';
+import { Clipboard } from '../../types/clipboard.js'
 
 interface BucketContentProps {
   paginatedObjects: BucketObject[];
@@ -11,12 +11,12 @@ interface BucketContentProps {
   title: string
   page: number
   totalPage: number
-  clipBoard: ClipBoard
+  clipboard: Clipboard
   message? : string
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipBoard, message }) => {
-  const items = [{label: '', value: ''}, ...paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))]
+const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipboard, message }) => {
+  const items = paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))
   return (
   <Box flexDirection="row" gap={4}>
   <Box flexDirection='column'>
@@ -43,7 +43,7 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
 
   </Box>
   <Box borderColor="greenBright" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
-    <Text>ClipBoard : {clipBoard?.item ? clipBoard.item.Key : ''}</Text>
+    <Text>ClipBoard : {clipboard?.item ? clipboard.item.Key : ''}</Text>
   </Box>
   
   <Box flexDirection='column'>

@@ -5,11 +5,11 @@ import { TODO } from '../types/todo.js';
 import { Message } from '../types/message.js';
 import Pagination from '../types/pagination.js'
 import { BucketObject } from '../types/bucketObject.js';
-import { sortObjects } from '../utils/helper.js';
+import { getBucketObject, sortObjects } from '../utils/helper.js';
 import fs from 'node:fs'
 import * as path from 'node:path';
 import os from 'os'
-import { ClipBoard } from '../types/clipBoard.js';
+import { Clipboard } from '../types/clipboard.js';
 
 export const useS3 = () => {
   const [buckets, setBuckets] = useState<string[]>([]);
@@ -22,22 +22,22 @@ export const useS3 = () => {
   const [tokens, setTokens] = useState<string[]>([]);
 
   useEffect(() => {
-    const getBuckets = async () => {
-      try {
-        const bucketNames = await fetchBuckets();
-        setBuckets(bucketNames);
-      } catch (error) {
-        console.log(s3Config)
-        console.error('Failed to fetch buckets:', error);
-      }
-    };
-
     getBuckets();
   }, []);
 
+  const getBuckets = async () => {
+    try {
+      const bucketNames = await fetchBuckets();
+      setBuckets(bucketNames);
+    } catch (error) {
+      console.log(s3Config)
+      console.error('Failed to fetch buckets:', error);
+    }
+  };
+
   const loadObjectsInBucket = async (bucketName: string, continuationToken?: string): Promise<BucketObject[]> => {
     const result = await fetchObjectsInBucket(bucketName, continuationToken)
-    const messyObjects: BucketObject[] = result.Contents?.map(obj => ({...obj, Key: obj.Key || 'nokey'})) || []
+    const messyObjects: BucketObject[] = result.Contents?.map(obj => ({...obj, Key: obj.Key || 'errnokey', FullKey: obj.Key || 'errnokey'})) || []
     const orderedObjects: BucketObject[] = sortObjects(messyObjects)
     setObjects(orderedObjects)
 
@@ -49,10 +49,22 @@ export const useS3 = () => {
   };
 
   const refresh = async () => {
+    setObjects([])
+    
     if(selectedBucket){
       const objects = await loadObjectsInBucket(selectedBucket)
+      if(selectedObject){
+        //IL FAUT RECUP LE NOUVEAU SELECTED OBJECT
+        const newSelectedObject = getBucketObject(selectedObject.FullKey, objects)
+        
+        if(!newSelectedObject){
+          setSelectedObject(null)
+        } else {
+          setSelectedObject(newSelectedObject)
+        }
+      }
     } else {
-      null
+      const buckets = await getBuckets()
     }
     
     //setSelectedObject(currentFolder ?? null)
@@ -60,7 +72,7 @@ export const useS3 = () => {
 
   const downloadObject = async (objectName: string, bucketName: string): Promise<Message> => {
     const result = await getObject(objectName, bucketName)
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    //await new Promise((resolve) => setTimeout(resolve, 3000));
     const objectData = await result.Body?.transformToByteArray() ?? ''
     const fileName: string = objectName.split('/').slice(-1)[0] || 'undefined'
     const path: string = os.homedir() + '/Downloads/' + fileName
@@ -95,13 +107,12 @@ export const useS3 = () => {
     return await writeFilePromise
   }
 
-  const addObject = async (clipBoard: ClipBoard, newBucket: string, newFolderKey? : string) => {
+  const addObject = async (clipBoard?: Clipboard, newBucket?: string, newFolderKey? : string) => {
     if(clipBoard){
       const object = await getObject(clipBoard.item.FullKey ?? clipBoard.item.Key, clipBoard.bucket)
-      const newObjectKey: string = newFolderKey ?? '' + '/' + clipBoard.item.Key
+      const newObjectKey: string = (newFolderKey ?? '') + '/' + clipBoard.item.Key
       const objectData = await object.Body?.transformToByteArray()
-      const result = await putObject(newObjectKey, objectData, newBucket)
-      console.log(result)
+      const result = await putObject(newObjectKey, objectData, newBucket ?? selectedBucket ?? '')
       return result
     } else {
       return 'no clipboard'

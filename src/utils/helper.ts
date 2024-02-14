@@ -18,9 +18,25 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
             const folderIndex: number = folders.findIndex(folder => folder.Key == levels[0])
             if(folderIndex == -1){
                 //On ajoute le dossier à la liste des dossiers
+
+
                 let newFolder: BucketObject = {
-                    Key: levels[0] || 'errorReadingFolder', 
+                    Key: levels[0] || 'errorReadingFolder',
+                    FullKey: '', 
                     Files: [fileInFolder]
+                }
+                
+                let needContinue: boolean = true
+                
+                for(let levelName of (object.FullKey || object.Key).split('/')){
+                    if(needContinue){
+                        if(levelName == levels[0]){
+                            needContinue = false
+                            newFolder.FullKey += levelName
+                        } else {
+                            newFolder.FullKey += levelName + '/'
+                        }
+                    }
                 }
 
                 folders = [...folders, newFolder]
@@ -40,6 +56,15 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
     return [...folders, ...files]
 }
 
-export function getBucketObject(name: string, inListe: BucketObject[]): BucketObject | void {
-    return inListe.find((obj)=> obj.Key === name)
+export function getBucketObject(fullKey: string, inListe: BucketObject[]): BucketObject | void {
+
+    let levels: string[] = fullKey.split('/')
+
+    if(levels.length > 1){
+        let folder: BucketObject | void = getBucketObject(levels[0] || "", inListe)
+        return folder?.Files ? getBucketObject(levels.slice(1).join('/'), folder.Files) : undefined
+    } else {
+        return inListe.find((obj)=> obj.Key === fullKey)
+    }
+
 }
