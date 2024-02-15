@@ -3,7 +3,7 @@ import { BucketObject } from "../types/bucketObject.js"
 import { useState } from "react"
 import searchHook from "../types/searchHook.js"
 
-export const useSearch = (items: BucketObject[]): searchHook => {
+export const useSearch =<T extends BucketObject | string>(items: T[]): searchHook<T> => {
     //const [results, setResults] = useState<BucketObject[]>(searchFilter('', items))
     const [searchMode, setSearchMode] = useState<boolean>(false)
     const [input, setInput] = useState<string>('')

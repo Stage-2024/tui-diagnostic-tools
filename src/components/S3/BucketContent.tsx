@@ -17,7 +17,7 @@ interface Props {
   clipboard: Clipboard
   highlight: BucketObject | null
   message? : string
-  search: searchHook
+  search: searchHook<BucketObject>
 }
 
 export default function BucketContent(props: PropsWithChildren<Props>) {

@@ -75,19 +75,25 @@ export function getBucketObject(fullKey: string, objects: BucketObject[]): Bucke
 
 }
 
-export function searchFilter(filterKey: string, objects: BucketObject[]): BucketObject[]{
+export function searchFilter<T extends BucketObject | string>(filterKey: string, items: T[]): T[]{
 
-    let top: BucketObject[] = []
-    let middle: BucketObject[] = []
+    let top: T[] = []
+    let middle: T[] = []
     //let bottom: BucketObject[] = []
 
-    for(let object of objects){
-        const index: number = object.Key.toLowerCase().indexOf(filterKey.toLowerCase())
+    for(let item of items){
+        let index: number = -1
+        if(typeof(item) == "string"){
+            index = item.toLowerCase().indexOf(filterKey.toLowerCase())
+        } else {
+            index = item.Key.toLowerCase().indexOf(filterKey.toLowerCase())
+        }
+        
         
         const cases: {default: () => void, [key: number | string]: () => void} = {
             [-1]: () => null,
-            [0]: () => top = [...top, object],
-            default: () => middle = [...middle, object]
+            [0]: () => top = [...top, item],
+            default: () => middle = [...middle, item]
         }
 
         const putObject: () => void = cases[index] ?? cases.default

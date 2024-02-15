@@ -14,7 +14,7 @@ const useGlobalInput = (
             process.exit()
         }
 
-        if(input === 'h') {
+        if(key.ctrl && input === 'h') {
             navigateTo('help')
         }
 

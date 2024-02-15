@@ -22,36 +22,32 @@ const S3Screen = () => {
     const s3 = useS3()
     const clipboard = useClipboard()
     const stack = useBucketStack()
-    const search = useSearch(s3.selectedObject?.Files || s3.objects)
+    const search = useSearch<BucketObject>(s3.selectedObject?.Files || s3.objects)
+    const bucketSearch = useSearch<string>(s3.buckets)
     //const folderSearch = useSearch(s3.selectedObject?.Files || [])
-    const paginatedBuckets = usePagination<string>(10, s3.buckets)
+    const paginatedBuckets = usePagination<string>(10, bucketSearch.results)
     const paginatedObjects = usePagination<BucketObject>(10, search.results)
-    const paginatedFoldersObjects = usePagination<BucketObject>(10, search.results)
+    //const paginatedFoldersObjects = usePagination<BucketObject>(10, search.results)
     const info = useInfo()
 
     // Handling keyboard input for pagination
     useInput((input, key) => {
         //!s3.selectedObject && !search.mode || s3.selectedObject && folderSearch.mode || s3.selectedBucket
-        if(!search.mode){
+        if(!search.mode && !bucketSearch.mode){
             if (input === 'n' || key.rightArrow) {
                 if (!s3.selectedBucket) {
                     paginatedBuckets.nextPage()
-                } else if(!s3.selectedObject) {
+                } else {
                     //console.log(s3.objects)
                     paginatedObjects.nextPage()
-                } else {
-                    paginatedFoldersObjects.nextPage()
                 }
             }
 
             if (input === 'p' || key.leftArrow) {
                 if (!s3.selectedBucket) {
                     paginatedBuckets.prevPage()
-                } else if(!s3.selectedObject) {
-                    //console.log(s3.objects)
-                    paginatedObjects.prevPage()
                 } else {
-                    paginatedFoldersObjects.prevPage()
+                    paginatedObjects.prevPage()
                 }
             }
 
@@ -64,6 +60,8 @@ const S3Screen = () => {
                     s3.setSelectedObject(null)
                     navigateTo('s3')
                 }
+
+                search.apply('')
             }
 
             if(input === 'c'){ // Copy
@@ -142,11 +140,13 @@ const S3Screen = () => {
 
             if(input === 's'){
                 search.toggle()
+                bucketSearch.toggle()
             }
 
         } else {
-            if(key.downArrow || key.upArrow || key.leftArrow || key.rightArrow){
+            if(key.downArrow || key.upArrow || key.leftArrow || key.rightArrow || key.escape){
                 search.toggle()
+                bucketSearch.toggle()
             }
 
             if(input === "q"){
@@ -162,6 +162,7 @@ const S3Screen = () => {
                 onSelect={({ label }: { label: string }) => s3.setSelectedBucket(label)}
                 page={paginatedBuckets.page}
                 totalPage={paginatedBuckets.pageCount}
+                search={bucketSearch}
             />
         );
     }
@@ -204,20 +205,20 @@ const S3Screen = () => {
         <Box flexDirection='column'>
             <BucketContent
                 title={s3.selectedObject.Key}
-                page={paginatedFoldersObjects.page}
-                totalPage={paginatedFoldersObjects.pageCount}
-                paginatedObjects={paginatedFoldersObjects.items}
+                page={paginatedObjects.page}
+                totalPage={paginatedObjects.pageCount}
+                paginatedObjects={paginatedObjects.items}
                 clipboard={clipboard.value}
                 highlight={s3.highlightedObject}
                 search={search}
                 onSelect={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                     s3.selectedObject && stack.push(s3.selectedObject)
                     object && s3.setSelectedObject(object)
                     info.setMessage(null)
                 }}
                 onHighLight={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedFoldersObjects.items)
+                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
                     object && s3.setHighlightedObject(object)
                 }}
             />
