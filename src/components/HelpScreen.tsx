@@ -7,6 +7,7 @@ const HelpScreen = () => {
     return <Box flexDirection='column'>
                 <Text>Help Information...</Text>
                 <Text>Press Esc  to go to Home Screen.</Text>
+                <Text>Press 'q' + return to quit</Text>
                 <Text color="magentaBright">S3 screen</Text>
                 <Box flexDirection='column' marginLeft={1}>
                     <Text>Press 'p' or left arrow for Previous</Text>

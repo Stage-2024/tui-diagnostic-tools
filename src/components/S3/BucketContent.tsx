@@ -1,57 +1,63 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react'
 import { Box, Text } from 'ink';
 import SelectInput from 'ink-select-input';
 import { BucketObject } from '../../types/bucketObject.js';
 import { Clipboard } from '../../types/clipboard.js'
+import searchHook from '../../types/searchHook.js'
+import SearchBar from './SearchBar.js';
+import S3Help from './S3Help.js';
 
-interface BucketContentProps {
+interface Props {
   paginatedObjects: BucketObject[];
-  onSelect: (item: { label: string }) => void;
-  onHighLight: (item: {label: string}) => void;
+  onSelect: (item: { label: string }) => void
+  onHighLight: (item: {label: string}) => void
   title: string
   page: number
   totalPage: number
   clipboard: Clipboard
   highlight: BucketObject | null
   message? : string
+  search: searchHook
 }
 
-const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelect, onHighLight, title, page, totalPage, clipboard, highlight, message }) => {
+export default function BucketContent(props: PropsWithChildren<Props>) {
   
-  const items = paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))
+  const items = props.paginatedObjects.map((obj : BucketObject) => ({ label: obj.Key, value: obj.Key}))
 
-  const highlightedDate: string =  highlight?.LastModified?.toLocaleString() ?? 'unknown'
+  const highlightedDate: string =  props.highlight?.LastModified?.toLocaleString() ?? 'unknown'
   return (
   <Box flexDirection="row" gap={3}>
   <Box flexDirection='column'>
     <Box>
       <Text bold underline>Files in </Text>
-      <Text bold underline color="whiteBright">{title} :</Text>
+      <Text bold underline color="whiteBright">{props.title} :</Text>
     </Box>
+    <SearchBar search={props.search}/>
     <Box flexDirection="column" margin={1}>
       <SelectInput
         items={items}
-        onSelect={onSelect}
-        onHighlight={onHighLight}
+        onSelect={props.onSelect}
+        onHighlight={props.onHighLight}
+        isFocused={!props.search.mode}
       />
     </Box>
     <Box>
       <Text>Page </Text>
-      <Text bold color="greenBright">{page} </Text>
+      <Text bold color="greenBright">{props.page} </Text>
       <Text>on </Text>
-      <Text bold color="greenBright">{totalPage}</Text>
+      <Text bold color="greenBright">{props.totalPage}</Text>
     </Box>
-    <Text>{message}</Text>
+    <Text>{props.message}</Text>
   </Box>
   <Box>
 
   </Box>
   <Box borderColor="green" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
     <Text>
-      Highlight : <Text underline>{highlight?.Key}</Text>
+      Highlight : <Text underline>{props.highlight?.Key}</Text>
     </Text>
     <Text>Size : 
-      <Text color="greenBright"> {highlight?.Size} </Text>
+      <Text color="greenBright"> {props.highlight?.Size} </Text>
       o
     </Text>
     <Text>
@@ -60,16 +66,8 @@ const BucketContent: React.FC<BucketContentProps> = ({ paginatedObjects, onSelec
     </Text> 
   </Box>
   <Box borderColor="yellow" borderStyle="round" marginLeft={2} paddingX={1} flexDirection='column'>
-    <Text>ClipBoard : {clipboard?.item ? clipboard.item.Key : ''}</Text>
+    <Text>ClipBoard : {props.clipboard?.item ? props.clipboard.item.Key : ''}</Text>
   </Box>
-  
-  <Box flexDirection='column'>
-      <Text>Press 'd' to download the object</Text>
-      <Text>Press 'c' to copy an object</Text>
-      <Text>Press 'v' to past an object</Text>
-      <Text>Press 'r' to refresh</Text>
-    </Box>
+  <S3Help searchMode={props.search.mode} />
   </Box>
 )};
-
-export default BucketContent;

@@ -10,7 +10,7 @@ const useGlobalInput = (
             customHandler(input, navigateTo);
         }
 
-        if(input === 'q') {
+        if(key.ctrl && input === 'q') {
             process.exit()
         }
 

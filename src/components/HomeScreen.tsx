@@ -28,6 +28,8 @@ const HomeScreen = () => {
         } else if (key.upArrow) {
             // Up arrow key pressed, move selection up
             globalInput = 'upArrow'
+        } else if (key.escape) {
+            globalInput = 'escape'
         } else {
             globalInput = input
         }
@@ -38,6 +40,7 @@ const HomeScreen = () => {
             return: () => navigateTo(options[selectedOption]?.navigation || 'home'),
             downArrow: () => setSelectedOption((prev) => (prev + 1) % options.length),
             upArrow: () => setSelectedOption((prev) => (prev - 1 + options.length) % options.length),
+            escape: () => process.exit(),
             default: () => null
         }
 
@@ -61,7 +64,7 @@ const HomeScreen = () => {
             </Box>
             <Box flexDirection='column' marginTop={1}>
                 <Text color='blueBright'> K00S TUI Diagnostic Terminal</Text>
-                <Text> S3 TOOL (s)  Help (h) </Text>
+                <Text> S3 TOOL (s)  Help (h)  Exit (esc)</Text>
             </Box>
         </Box>
     );

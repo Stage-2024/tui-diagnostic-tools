@@ -62,15 +62,37 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
     return [...folders, ...files]
 }
 
-export function getBucketObject(fullKey: string, inListe: BucketObject[]): BucketObject | void {
+export function getBucketObject(fullKey: string, objects: BucketObject[]): BucketObject | void {
 
     let levels: string[] = fullKey.split('/')
 
     if(levels.length > 1){
-        let folder: BucketObject | void = getBucketObject(levels[0] || "", inListe)
+        let folder: BucketObject | void = getBucketObject(levels[0] || "", objects)
         return folder?.Files ? getBucketObject(levels.slice(1).join('/'), folder.Files) : undefined
     } else {
-        return inListe.find((obj)=> obj.Key === fullKey)
+        return objects.find((obj)=> obj.Key === fullKey)
     }
 
+}
+
+export function searchFilter(filterKey: string, objects: BucketObject[]): BucketObject[]{
+
+    let top: BucketObject[] = []
+    let middle: BucketObject[] = []
+    //let bottom: BucketObject[] = []
+
+    for(let object of objects){
+        const index: number = object.Key.toLowerCase().indexOf(filterKey.toLowerCase())
+        
+        const cases: {default: () => void, [key: number | string]: () => void} = {
+            [-1]: () => null,
+            [0]: () => top = [...top, object],
+            default: () => middle = [...middle, object]
+        }
+
+        const putObject: () => void = cases[index] ?? cases.default
+        putObject()
+    }
+
+    return [...top, ...middle]
 }
