@@ -159,7 +159,10 @@ const S3Screen = () => {
         return (
             <BucketList
                 paginatedBuckets={paginatedBuckets.items}
-                onSelect={({ label }: { label: string }) => s3.setSelectedBucket(label)}
+                onSelect={({ value }: { value: string }) => {
+                    s3.setSelectedBucket(value)
+                    search.apply('')
+                }}
                 page={paginatedBuckets.page}
                 totalPage={paginatedBuckets.pageCount}
                 search={bucketSearch}
@@ -178,13 +181,14 @@ const S3Screen = () => {
                     clipboard={clipboard.value}
                     highlight={s3.highlightedObject}
                     search={search}
-                    onSelect={({ label }: { label: string}) => {
-                        const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                    onSelect={({ value }: { value: string}) => {
+                        const object: BucketObject | void = getBucketObject(value, paginatedObjects.items)
                         object && s3.setSelectedObject(object) 
                         info.setMessage(null)
+                        search.apply('')
                     }}
-                    onHighLight={({ label }: { label: string}) => {
-                        const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                    onHighLight={({ value }: { value: string}) => {
+                        const object: BucketObject | void = getBucketObject(value, paginatedObjects.items)
                         object && s3.setHighlightedObject(object)
                     }}
                 />
@@ -211,14 +215,15 @@ const S3Screen = () => {
                 clipboard={clipboard.value}
                 highlight={s3.highlightedObject}
                 search={search}
-                onSelect={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                onSelect={({ value }: { value: string}) => {
+                    const object: BucketObject | void = getBucketObject(value, paginatedObjects.items)
                     s3.selectedObject && stack.push(s3.selectedObject)
                     object && s3.setSelectedObject(object)
                     info.setMessage(null)
+                    search.apply('')
                 }}
-                onHighLight={({ label }: { label: string}) => {
-                    const object: BucketObject | void = getBucketObject(label, paginatedObjects.items)
+                onHighLight={({ value }: { value: string}) => {
+                    const object: BucketObject | void = getBucketObject(value, paginatedObjects.items)
                     object && s3.setHighlightedObject(object)
                 }}
             />

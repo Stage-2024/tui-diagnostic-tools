@@ -6,7 +6,7 @@ import SearchBar from './SearchBar.js';
 
 interface Props {
   paginatedBuckets: string[];
-  onSelect: (item: { label: string }) => void;
+  onSelect: (item: { value: string }) => void;
   page: number
   totalPage: number
   search: searchHook<string>
@@ -20,7 +20,7 @@ export default function BucketList(props: PropsWithChildren<Props>){
       <SearchBar search={props.search}/>
       <Box flexDirection="column" margin={1}>
         <SelectInput
-          items={props.paginatedBuckets.map((bucket : string) => ({ label: bucket, value: bucket }))}
+          items={props.paginatedBuckets.map((bucket : string) => ({ label: '🥛 ' + bucket, value: bucket }))}
           onSelect={props.onSelect}
         />
       </Box>

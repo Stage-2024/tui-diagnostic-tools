@@ -61,7 +61,7 @@ const App = () => {
         <Box flexDirection="column">
             <Box borderStyle="round" borderColor="blue" padding={1}>
                 <Text bold color={process.env['DEBUG'] ? "greenBright" : color}>
-                    K00S TUI Diagnostic Terminal
+                    K00S TUI Diagnostic Terminal ☜(ﾟヮﾟ☜)
                 </Text>
             </Box>
             <Box flexGrow={1} marginTop={1} borderStyle="round" borderColor="blue" padding={1}>

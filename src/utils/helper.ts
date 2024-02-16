@@ -29,7 +29,8 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
                     Key: levels[0] || 'errorReadingFolder',
                     FullKey: '', 
                     Size: 0,
-                    Files: [fileInFolder]
+                    Files: [fileInFolder],
+                    emoji: '📁'
                 }
                 
                 let needContinue: boolean = true
@@ -50,7 +51,43 @@ export function sortObjects(objects: BucketObject[]): BucketObject[]{
                 //On edit le dossier
                 folders[folderIndex]!.Files?.push(fileInFolder)
             } 
-        } else {
+        } else { //C'est un fichier
+            const fileKeys: string[] = object.Key.split('.')
+            const objExt: string = fileKeys[fileKeys.length - 1] || ''
+            const imageExts: string[] = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg', 'tiff']
+            const videoExts: string[] = ['mp4', 'mkv', 'webm', 'avi', 'mov', 'wmv', 'flv', '3gp']
+            const textExts: string[] = ['txt', 'docx', 'doc', 'word']
+            const codeExts: string[] = [
+                'ts', 'js', 'html', 'css',
+                'json', 'xml', 'scss', 'sass',
+                'less', 'php', 'jsx', 'tsx',
+                'java', 'py', 'rb', 'swift',
+                'c', 'cpp', 'cs', 'sql',
+                'sh', 'pl', 'go', 'rust',
+                'rs', 'asm', 'r', 'scala',
+                'groovy', 'kt', 'lua', 'dart',
+                'yaml', 'yml',  'toml', 'ini',
+            ]
+            const pdfExts: string[] = ['pdf']
+            switch (true) {
+                case imageExts.includes(objExt):
+                    object.emoji = '📷';
+                    break;
+                case videoExts.includes(objExt):
+                    object.emoji = '📹';
+                    break;
+                case textExts.includes(objExt):
+                    object.emoji = '📝';
+                    break;
+                case codeExts.includes(objExt):
+                    object.emoji = '💻';
+                    break;
+                case pdfExts.includes(objExt):
+                    object.emoji = '📄';
+                    break;
+                default:
+                    object.emoji = '📃';
+            }
             files.push(object)
         }
     }
