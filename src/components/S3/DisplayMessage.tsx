@@ -13,11 +13,11 @@ export default function DisplayMessage(props: PropsWithChildren<Props>) {
     return (
         <Box marginX={1} marginTop={1}>
             {props.message?.loader && <Text color="greenBright"><Spinner type={props.message.loader}/> </Text>}
-            {props.message?.content?.map((element) => {
+            {props.message?.content?.map((element, index) => {
                 if(element.highlight){
-                    return <Text underline color={props.highlight}>{element.text}</Text>
+                    return <Text key={index} underline color={props.highlight}>{element.text}</Text>
                 } else {
-                    return <Text>{element.text}</Text>
+                    return <Text key={index}>{element.text}</Text>
                 }
                 
             })}
