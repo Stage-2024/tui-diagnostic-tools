@@ -5,5 +5,6 @@ export type BucketObject = {
     Size: number
     Files?: BucketObject[]
     emoji?: string,
+    displayPath? : boolean
     [key: string]: unknown
   }

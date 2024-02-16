@@ -112,21 +112,22 @@ export function getBucketObject(fullKey: string, objects: BucketObject[]): Bucke
 
 }
 
-export function searchFilter<T extends BucketObject | string>(filterKey: string, items: T[]): T[]{
+export function searchFilter<T extends BucketObject | string>(filterKey: string, items: T[]/*, folder?: string*/): T[]{
 
     let top: T[] = []
     let middle: T[] = []
-    //let bottom: BucketObject[] = []
+    //let bottom: T[] = []
 
     for(let item of items){
-        let index: number = -1
+        let index: number | 'last' = -1
         if(typeof(item) == "string"){
             index = item.toLowerCase().indexOf(filterKey.toLowerCase())
         } else {
             index = item.Key.toLowerCase().indexOf(filterKey.toLowerCase())
+            //item.Key = ((folder && folder + '/') ?? '') + item.Key 
+            //item.displayPath = folder ? true : false
         }
-        
-        
+
         const cases: {default: () => void, [key: number | string]: () => void} = {
             [-1]: () => null,
             [0]: () => top = [...top, item],
@@ -135,6 +136,13 @@ export function searchFilter<T extends BucketObject | string>(filterKey: string,
 
         const putObject: () => void = cases[index] ?? cases.default
         putObject()
+
+        /*
+        if(typeof(item) !== "string" && item.Files){
+            bottom = [...bottom, ...searchFilter(filterKey, item.Files, item.Key) as T[]]
+        }
+        */
+
     }
 
     return [...top, ...middle]

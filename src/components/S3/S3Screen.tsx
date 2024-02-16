@@ -184,6 +184,7 @@ const S3Screen = () => {
                     onSelect={({ value }: { value: string}) => {
                         const object: BucketObject | void = getBucketObject(value, paginatedObjects.items)
                         object && s3.setSelectedObject(object) 
+                        object && object.Files?[0] && s3.setHighlightedObject(object.Files[0] || object) : null;
                         info.setMessage(null)
                         search.apply('')
                     }}

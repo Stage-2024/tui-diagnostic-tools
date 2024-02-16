@@ -22,7 +22,9 @@ interface Props {
 
 export default function BucketContent(props: PropsWithChildren<Props>) {
   
-  const items = props.paginatedObjects.map((obj : BucketObject) => ({ label: (obj.emoji || '') + ' ' + obj.Key, value: obj.Key}))
+  const items = props.paginatedObjects.map((obj : BucketObject) => ({ 
+    label: (obj.emoji || '') + ' ' + (obj.displayPath ? obj.FullKey : obj.Key), 
+    value: obj.Key}))
 
   const highlightedDate: string =  props.highlight?.LastModified?.toLocaleString() ?? 'unknown'
   return (
