@@ -25,6 +25,7 @@ export default function S3Help(props: PropsWithChildren<Props>){
                 <Text>Press 'v' to past an object</Text>
                 <Text>Press 'r' to refresh</Text>
                 <Text>Press 's' to search</Text>
+                <Text>Press 'x' to delete an object</Text>
               </Box>
             )
           }

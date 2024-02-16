@@ -3,5 +3,5 @@ export type Message = null | {
         text: string
         highlight? : boolean
     }[], 
-    loader? : "dots" | "dots4" | "arc" | "flip"
+    loader? : "dots" | "dots4" | "arc" | "flip" | "grenade"
 }

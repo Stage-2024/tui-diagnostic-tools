@@ -126,7 +126,7 @@ const S3Screen = () => {
             if(input === 'r'){ // Refresh
                 info.setMessage({
                     content:[{text:"Rafraîchissement de la liste des fichiers..."}],
-                    loader: 'dots'
+                    loader: 'arc'
                 })
 
                 s3.refresh().then(() => info.setMessage({
@@ -141,6 +141,20 @@ const S3Screen = () => {
             if(input === 's'){
                 search.toggle()
                 bucketSearch.toggle()
+            }
+
+            if(input === 'x'){
+                if(s3.highlightedObject && s3.selectedBucket && !s3.highlightedObject.Files){
+                    info.setMessage({
+                        content : [
+                            {text: 'suppression...'}
+                        ],
+                        loader: 'grenade'
+                    })
+                    s3.deleteObj(s3.highlightedObject.FullKey, s3.selectedBucket).then((message) => {
+                        info.setMessage(message)
+                    })
+                }
             }
 
         } else {

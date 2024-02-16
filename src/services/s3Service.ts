@@ -1,4 +1,4 @@
-import { S3Client, ListBucketsCommand, ListObjectsV2Command, Bucket, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, ListBucketsCommand, ListObjectsV2Command, Bucket, GetObjectCommand, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
 
@@ -40,6 +40,16 @@ export const putObject = async (objectName: string, data: TODO, bucketName: stri
     Bucket: bucketName,
     Key: objectName,
     Body: data
+  })
+
+  const result = await s3Client.send(command)
+  return result
+}
+
+export const deleteObject = async (objectName: string, bucketName: string) => {
+  const command = new DeleteObjectCommand({
+    Bucket: bucketName,
+    Key: objectName
   })
 
   const result = await s3Client.send(command)

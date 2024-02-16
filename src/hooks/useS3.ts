@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchBuckets, fetchObjectsInBucket, getObject, putObject} from '../services/s3Service.js';
+import { fetchBuckets, fetchObjectsInBucket, getObject, putObject, deleteObject} from '../services/s3Service.js';
 import { s3Config } from '../config/index.js';
 import { TODO } from '../types/todo.js';
 import { Message } from '../types/message.js';
@@ -113,6 +113,22 @@ export const useS3 = () => {
     return await writeFilePromise
   }
 
+  const deleteObj = async (objectName: string, bucketName: string): Promise<Message> => {  
+    await deleteObject(objectName, bucketName)
+    refresh()
+    const message = {
+      content: [
+        {text: 'L\'objet '},
+        {
+          text: objectName,
+          highlight: true
+        },
+        {text: ' a été supprimé avec succès.'}
+      ]
+    } 
+    return message
+  }
+
   const addObject = async (clipBoard?: Clipboard, newBucket?: string, newFolderKey? : string) => {
     if(clipBoard){
       const object = await getObject(clipBoard.item.FullKey ?? clipBoard.item.Key, clipBoard.bucket)
@@ -125,6 +141,7 @@ export const useS3 = () => {
     }
     
   }
+
 
   useEffect(() => {
     if (selectedBucket) {
@@ -148,6 +165,7 @@ export const useS3 = () => {
     setHighlightedObject,
     downloadObject,
     addObject,
+    deleteObj,
 
     refresh,
 
