@@ -19,6 +19,7 @@ export default function S3Help(props: PropsWithChildren<Props>){
           } else {
             return (
               <Box flexDirection='column'>
+                <Text>Press 'b' to go to previous folder</Text>
                 <Text>Press 'd' to download the object</Text>
                 <Text>Press 'c' to copy an object</Text>
                 <Text>Press 'v' to past an object</Text>
